@@ -2,14 +2,19 @@ package com.ssafy.enjoyTrip.user;
 
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.common.BaseResponse;
-import com.ssafy.enjoyTrip.user.model.UserDto;
+import com.ssafy.enjoyTrip.user.model.dto.CreateUserReq;
+import com.ssafy.enjoyTrip.user.model.dto.GetUserRes;
+import com.ssafy.enjoyTrip.user.model.dto.ModifyPwdReq;
+import com.ssafy.enjoyTrip.user.model.dto.ModifyUserReq;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import static com.ssafy.enjoyTrip.common.BaseResponseStatus.FAILED;
+import javax.validation.Valid;
 
 /**
- * TODO : validation 자세하게 / 공통 Response, Exception 객체 추가
+ * TODO : 소셜 로그인/로그아웃, 토큰 등 세션유지
  */
 @Controller
 @RequestMapping("/users")
@@ -25,23 +30,13 @@ public class UserController {
 
     /**
      * 회원가입
-     * args : String emailId, String password, String phoneNumber
-     * return : userId
+     * @param createUserReq
      */
     @PostMapping
-    public BaseResponse<?> join(@RequestBody UserDto userDto) {
-        // validation
+    public ResponseEntity<?> join(@RequestBody @Valid CreateUserReq createUserReq) throws BaseException {
+        userService.join(createUserReq);
 
-        if (userDto.getEmailId() == null
-                || userDto.getPassword() == null
-                || userDto.getNickname() == null)
-            return new BaseResponse<>(new BaseException(FAILED));
-
-        try {
-            return new BaseResponse<>(userService.join(userDto));
-        } catch (Exception e) {
-            return new BaseResponse<>(e);
-        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -54,48 +49,48 @@ public class UserController {
 
     /**
      * 회원정보 조회
+     * @param userId
      */
     @GetMapping("/{userId}")
-    public BaseResponse<?> findById(@PathVariable Integer userId) {
-        // validation
-        if (userId == null) return new BaseResponse<>(new BaseException(FAILED));
+    public ResponseEntity<?> findById(@PathVariable int userId) throws BaseException {
+        GetUserRes findUser = userProvider.findById(userId);
 
-        try {
-            return new BaseResponse<>(userProvider.findById(userId));
-        } catch (BaseException e) {
-            return new BaseResponse<>(e.getStatus());
-        }
+        return ResponseEntity
+                .ok()
+                .body(new BaseResponse<>(findUser));
+    }
+
+
+    /**
+     * 회원정보 수정(비밀번호 제외)
+     * @param modifyUserReq 값 다 들어있음. 정보수정 창 들어갈때 findById 호출 -> 값 다 갖고 들어가게
+     */
+    @PatchMapping
+    public ResponseEntity<?> modifyUser(@RequestBody @Valid ModifyUserReq modifyUserReq) throws BaseException {
+        userService.modifyUser(modifyUserReq);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 비밀번호 변경
+     * @param modifyPwdReq
+     */
+    @PatchMapping
+    public ResponseEntity<?> modifyPassword(@RequestBody @Valid ModifyPwdReq modifyPwdReq) throws BaseException {
+        userService.modifyPassword(modifyPwdReq);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * 회원탈퇴
+     * @param userId
      */
     @PostMapping("/delete")
-    public BaseResponse<?> deleteUser(@RequestBody Integer userId) {
-        // validation
-        if (userId == null) return new BaseResponse<>(new BaseException(FAILED));
+    public ResponseEntity<?> deleteUser(@RequestBody int userId) throws BaseException {
+        userService.deleteUser(userId);
 
-        try {
-            return new BaseResponse<>(userService.deleteUser(userId));
-        } catch (BaseException e) {
-            return new BaseResponse<>(e.getStatus());
-        }
-    }
-
-    /**
-     * 회원정보 수정
-     * @param userDto - 값 다 들어있음. 정보수정 창 들어갈때 findById 호출 -> 값 다 갖고 들어가게
-     * @return
-     */
-    @PostMapping("/update")
-    public BaseResponse<?> modifyUser(@RequestBody UserDto userDto) {
-        // validation
-        if (userDto.getUserId() == null) return new BaseResponse<>(new BaseException(FAILED));
-
-        try {
-            return new BaseResponse<>(userService.modifyUser(userDto));
-        } catch (BaseException e) {
-            return new BaseResponse<>(e.getStatus());
-        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
