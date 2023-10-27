@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+    <!--mapper에서 매칭할 parmeter Type 별칭 설정-->
+    <typeAliases>
+        <typeAlias type="com.ssafy.enjoyTrip.user.model.dto.GetUserRes" alias="getUserRes"/>
+        <typeAlias type="com.ssafy.enjoyTrip.user.model.dto.CreateUserReq" alias="createUserReq"/>
+        <typeAlias type="com.ssafy.enjoyTrip.user.model.dto.ModifyPwdReq" alias="modifyPwdReq"/>
+        <typeAlias type="com.ssafy.enjoyTrip.user.model.dto.ModifyUserReq" alias="modifyUserReq"/>
+    </typeAliases>
+
+
+    <environments default="development">
+
+        <!-- environment id를 구분하여 연결할 DB를 여러개 구성할 수 도 있음 -->
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/enjoytrip?serverTimezone=UTC&amp;characterEncoding=UTF-8"/>
+                <property name="username" value="ssafy"/>
+                <property name="password" value="ssafy"/>
+            </dataSource>
+        </environment>
+
+    </environments>
+
+    <mappers>
+<<<<<<< HEAD
+        <mapper resource="UserMapper.xml"/>
+=======
+        <mapper resource="mapper/UserMapper.xml"/>
+>>>>>>> 00ade3a (Mybatis 진행중)
+    </mappers>
+
+
+</configuration>
