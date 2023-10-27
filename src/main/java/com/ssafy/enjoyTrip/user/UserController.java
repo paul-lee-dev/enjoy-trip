@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * TODO : 소셜 로그인/로그아웃, 토큰 등 세션유지
@@ -47,9 +48,11 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<?> findAll() throws BaseException {
+        List<GetUserRes> userList =userProvider.findAll();
+
         return ResponseEntity
                 .ok()
-                .body(userProvider.findAll());
+                .body(new BaseResponse<>(userList));
     }
 
     /**
@@ -72,6 +75,7 @@ public class UserController {
                 .ok()
                 .body(new BaseResponse<>(findUser));
     }
+
 
 
 //    /**
@@ -105,5 +109,17 @@ public class UserController {
 //        userService.deleteUser(userId);
 //
 //        return new ResponseEntity<>(HttpStatus.OK);
+//    }
+//
+//    /**
+//     * (test) 회원정보 조회(이메일)
+//     */
+//    @GetMapping("/byemail/{email}")
+//    public ResponseEntity<?> findByEmail(@PathVariable String email) throws BaseException {
+//        GetUserRes findUser = userProvider.findByEmail(email);
+//
+//        return ResponseEntity
+//                .ok()
+//                .body(new BaseResponse<>(findUser));
 //    }
 }

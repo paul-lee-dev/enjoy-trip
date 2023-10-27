@@ -26,12 +26,7 @@
     </environments>
 
     <mappers>
-<<<<<<< HEAD
         <mapper resource="UserMapper.xml"/>
-=======
         <mapper resource="mapper/UserMapper.xml"/>
->>>>>>> 00ade3a (Mybatis 진행중)
     </mappers>
-
-
 </configuration>
