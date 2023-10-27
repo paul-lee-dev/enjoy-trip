@@ -14,7 +14,7 @@ public class CreateUserReq {
     private String emailId;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@!%*#?&])[A-Za-z\\d@!%*#?&]{8,}$", message = "비밀번호 형식이 올바르지 않습니다.")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@!%*#?&])[A-Za-z\\d@!%*#?&]{8,}$", message = "비밀번호는 8자 이상의 영문,숫자,특수문자 조합으로 구성해주세요.")
     private String password;
 
     // 일치여부 체크는 service에서
@@ -30,7 +30,7 @@ public class CreateUserReq {
     private String lastName;
 
     @NotBlank(message = "닉네임을 입력해주세요.")
-    @Pattern(regexp = "^[가-힣a-zA-Z0-9._-]{2,20}\\$" , message = "닉네임은 2~20자의 한글, 영어 대/소문자, 숫자, -, _로 구성되어야 합니다.")
+    @Pattern(regexp = "^[가-힣a-zA-Z0-9._-]{2,20}$" , message = "닉네임은 2~20자의 한글, 영어 대/소문자, 숫자, -, _로 구성되어야 합니다.")
     private String nickname;
 
     @NotBlank(message = "전화번호를 입력해주세요.")

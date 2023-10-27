@@ -28,7 +28,7 @@ public class ModifyUserReq {
     private String lastName;
 
     @NotBlank(message = "닉네임을 입력해주세요.")
-    @Pattern(regexp = "^[가-힣a-zA-Z0-9._-]{2,20}\\$" , message = "닉네임은 2~20자의 한글, 영어 대/소문자, 숫자, -, _로 구성되어야 합니다.")
+    @Pattern(regexp = "^[가-힣a-zA-Z0-9._-]{2,20}$" , message = "닉네임은 2~20자의 한글, 영어 대/소문자, 숫자, -, _로 구성되어야 합니다.")
     private String nickname;
 
     @NotBlank(message = "전화번호를 입력해주세요.")

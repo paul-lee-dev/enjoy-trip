@@ -16,8 +16,8 @@ public enum BaseResponseStatus {
      * 2xxx : 공통, DB
      */
 
-    // @Valid 발생 예외
-    INVALID_PARAM(2000, "입력값이 올바르지 않습니다."),
+    // @Valid 발생 예외 Code : 2000
+//    INVALID_PARAM(2000, "입력값이 올바르지 않습니다."),
 
     // DB
     DB_ERROR(2400, "DB 에러"),

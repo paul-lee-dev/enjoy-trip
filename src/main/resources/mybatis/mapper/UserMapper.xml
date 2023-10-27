@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ssafy.enjoyTrip.user.dao.UserMapper">
+
+    <!-- 회원가입 -->
+    <insert id="createUser" parameterType="createUserReq">
+        insert into user(email_id, password, first_name, last_name, nickname,
+                         phone_number)
+        values (#{emailId}, #{password}, #{firstName}, #{lastName}, #{nickname}
+               , #{phoneNumber})
+    </insert>
+
+    <!-- 정보조회 -->
     <select id="findById" parameterType="int" resultType="getUserRes">
         select user_id, email_id, password, first_name, last_name, nickname,
                created_at, phone_number, status
@@ -17,4 +27,22 @@
                        created_at, phone_number, status
                 from user
     </select>
+
+    <!-- 수정 -->
+    <update id="modifyUser" parameterType="modifyUserReq">
+        update user set email_id = #{emailId}, first_name = #{firstName},
+                        last_name = #{lastName}, phone_number = #{phoneNumber}
+        where user_id = #{userId}
+    </update>
+
+    <update id="modifyPassword" parameterType="modifyPwdReq">
+        update user set password = #{password}
+        where user_id = #{userId}
+    </update>
+
+    <!-- 삭제 -->
+    <update id="deleteUser" parameterType="int">
+        update user set status = 'deleted'
+        where user_id = #{userId}
+    </update>
 </mapper>

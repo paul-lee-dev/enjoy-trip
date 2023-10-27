@@ -42,11 +42,15 @@ public class UserProvider {
             throw new BaseException(DB_ERROR);
         }
 
-        if (findUser == null) throw new BaseException(WRONG_ID);
         return findUser;
     }
 
     public List<GetUserRes> findAll() throws BaseException {
-        return userDao.findAll();
+        try {
+            return userDao.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 }

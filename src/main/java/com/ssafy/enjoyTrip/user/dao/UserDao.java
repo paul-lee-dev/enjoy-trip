@@ -8,11 +8,11 @@ import com.ssafy.enjoyTrip.user.model.dto.ModifyUserReq;
 import java.util.List;
 
 public interface UserDao {
-//    void createUser(CreateUserReq createUserReq);
+    void createUser(CreateUserReq createUserReq);
     GetUserRes findById(int userId);
     GetUserRes findByEmail(String email);
-//    void modifyUser(ModifyUserReq modifyUserReq);
-//    void modifyPassword(ModifyPwdReq modifyPwdReq);
-//    void deleteUser(int userId);
+    void modifyUser(ModifyUserReq modifyUserReq);
+    void modifyPassword(ModifyPwdReq modifyPwdReq);
+    void deleteUser(int userId);
     List<GetUserRes> findAll();
 }

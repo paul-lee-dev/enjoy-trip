@@ -5,8 +5,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import static com.ssafy.enjoyTrip.common.BaseResponseStatus.INVALID_PARAM;
-
 @ControllerAdvice
 public class CommonControllerAdvice {
 
@@ -22,6 +20,6 @@ public class CommonControllerAdvice {
     public ResponseEntity<?> validationExceptionHandler(MethodArgumentNotValidException e) {
         return ResponseEntity
                 .badRequest()
-                .body(new BaseResponse<>(new BaseException(INVALID_PARAM)));
+                .body(new BaseResponse<>(e));
     }
 }
