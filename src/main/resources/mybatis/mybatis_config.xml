@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
-    <!--mapper에서 매칭할 parmeter Type 별칭 설정-->
-    <typeAliases>
-        <typeAlias type="com.ssafy.enjoyTrip.user.model.dto.GetUserRes" alias="getUserRes"/>
-        <typeAlias type="com.ssafy.enjoyTrip.user.model.dto.CreateUserReq" alias="createUserReq"/>
-        <typeAlias type="com.ssafy.enjoyTrip.user.model.dto.ModifyPwdReq" alias="modifyPwdReq"/>
-        <typeAlias type="com.ssafy.enjoyTrip.user.model.dto.ModifyUserReq" alias="modifyUserReq"/>
-    </typeAliases>
-
 
     <environments default="development">
 
