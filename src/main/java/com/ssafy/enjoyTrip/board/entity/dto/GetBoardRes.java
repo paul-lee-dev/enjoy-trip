@@ -1,18 +1,20 @@
 package com.ssafy.enjoyTrip.board.entity.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class CreateArticleReq {
-    @NotBlank(message="제목을 입력해주세요.")
+@Builder
+public class GetBoardRes {
+    private int articleId;
+    private int userId;
     private String subject;
-
-    @NotBlank(message="내용을 입력해주세요.")
     private String content;
+    private int hit;
+    private String createdAt;
+    private String updatedAt;
 }

@@ -8,11 +8,11 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class Board {
-    private int article_id;
-    private int user_id;
+    private int articleId;
+    private int userId;
     private String subject;
     private String content;
     private int hit;
-    private String created_at;
-    private String updated_at;
+    private String createdAt;
+    private String updatedAt;
 }

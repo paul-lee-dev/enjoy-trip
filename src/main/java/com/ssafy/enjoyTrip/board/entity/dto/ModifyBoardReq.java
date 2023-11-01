@@ -9,12 +9,12 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ModifyArticleReq {
-    @NotBlank(message="article is null")
-    private int article_id;
+public class ModifyBoardReq {
+    @NotBlank(message="article_id is null")
+    private int articleId;
 
     @NotBlank(message="user_id is null")
-    private int user_id;
+    private int userId;
 
     @NotBlank(message="제목을 입력해주세요.")
     private String subject;
