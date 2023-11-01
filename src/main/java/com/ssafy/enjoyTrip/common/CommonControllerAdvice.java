@@ -22,4 +22,11 @@ public class CommonControllerAdvice {
                 .badRequest()
                 .body(new BaseResponse<>(e));
     }
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<?> alLExceptionHandler(Exception e) {
+        return ResponseEntity
+                .internalServerError()
+                .build();
+    }
 }

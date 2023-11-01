@@ -1,5 +1,6 @@
-package com.ssafy.enjoyTrip.user.model.dto;
+package com.ssafy.enjoyTrip.user.entity.dto;
 
+import com.ssafy.enjoyTrip.common.constant.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +21,5 @@ public class GetUserRes {
     private LocalDateTime createdAt;
     private String phoneNumber;
     private String status;
+//    private Role role;
 }

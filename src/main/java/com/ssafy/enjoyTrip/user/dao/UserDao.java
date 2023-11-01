@@ -1,9 +1,9 @@
 package com.ssafy.enjoyTrip.user.dao;
 
-import com.ssafy.enjoyTrip.user.model.dto.CreateUserReq;
-import com.ssafy.enjoyTrip.user.model.dto.GetUserRes;
-import com.ssafy.enjoyTrip.user.model.dto.ModifyPwdReq;
-import com.ssafy.enjoyTrip.user.model.dto.ModifyUserReq;
+import com.ssafy.enjoyTrip.user.entity.dto.CreateUserReq;
+import com.ssafy.enjoyTrip.user.entity.dto.GetUserRes;
+import com.ssafy.enjoyTrip.user.entity.dto.ModifyPwdReq;
+import com.ssafy.enjoyTrip.user.entity.dto.ModifyUserReq;
 
 import java.util.List;
 

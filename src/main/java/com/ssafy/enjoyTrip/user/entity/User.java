@@ -1,5 +1,6 @@
-package com.ssafy.enjoyTrip.user.model.entity;
+package com.ssafy.enjoyTrip.user.entity;
 
+import com.ssafy.enjoyTrip.common.constant.Role;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,4 +19,5 @@ public class User {
     private LocalDateTime updatedAt;
     private String phoneNumber;
     private String status;
+//    private Role role;
 }

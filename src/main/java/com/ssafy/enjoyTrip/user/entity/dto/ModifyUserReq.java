@@ -1,25 +1,23 @@
-package com.ssafy.enjoyTrip.user.model.dto;
+package com.ssafy.enjoyTrip.user.entity.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Getter @Setter
 @NoArgsConstructor
-public class CreateUserReq {
+public class ModifyUserReq {
+
+    @NotNull(message = "userId is null")
+    private Integer userId;
 
     @NotBlank(message = "이메일을 입력해주세요.")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식이 올바르지 않습니다.")
     private String emailId;
-
-    @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@!%*#?&])[A-Za-z\\d@!%*#?&]{8,}$", message = "비밀번호는 8자 이상의 영문,숫자,특수문자 조합으로 구성해주세요.")
-    private String password;
-
-    // 일치여부 체크는 service에서
-    @NotBlank(message = "확인 비밀번호를 입력해주세요.")
-    private String passwordCheck;
 
     @NotBlank(message = "이름을 입력해주세요.")
     @Pattern(regexp = "^[A-Za-z가-힣]{1,20}$" , message = "이름에 특수문자, 숫자는 사용할 수 없습니다.")

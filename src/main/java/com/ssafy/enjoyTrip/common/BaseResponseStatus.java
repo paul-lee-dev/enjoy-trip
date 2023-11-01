@@ -13,29 +13,12 @@ public enum BaseResponseStatus {
     SUCCESS(1000, "요청에 성공하였습니다."),
 
     /**
-     * 2xxx : 공통, DB
+     * 2xxx : 공통, 시스템
      */
 
-    // @Valid 발생 예외 Code : 2000
-//    INVALID_PARAM(2000, "입력값이 올바르지 않습니다."),
-
-    // DB
     DB_ERROR(2400, "DB 에러"),
+    SESSION_ERROR(2420, "세션이 이미 만료되었습니다."),
 
-
-//    // null
-//    NULL_EMAIL(2000, "이메일을 입력해주세요."),
-//    NULL_PASSWORD(2001, "비밀번호를 입력해주세요."),
-//    NULL_NICKNAME(2002, "nickname을 입력해주세요."),
-//    NULL_FIRSTNAME(2003, "first name을 입력해주세요."),
-//    NULL_LASTNAME(2004, "last name을 입력해주세요."),
-//    NULL_PHONENUM(2005, "휴대폰 번호를 입력해주세요."),
-//    NULL_ID(2006, "유저 ID가 없습니다."), // 프론트 ~ DB에서만 사용되는 ID값
-//
-//    // invalid
-//    INVALID_EMAIL(2020, "이메일 형식이 올바르지 않습니다."),
-//    INVALID_PASSWORD(2021, "비밀번호 형식이 올바르지 않습니다."),
-//    INVALID_PHONENUM(2022, "휴대폰 번호 형식이 올바르지 않습니다."),
 
     // mismatch
     WRONG_EMAIL(3030, "유저 정보가 존재하지 않습니다."),

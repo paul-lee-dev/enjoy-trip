@@ -2,30 +2,28 @@ package com.ssafy.enjoyTrip.user;
 
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.common.BaseResponse;
-import com.ssafy.enjoyTrip.user.model.dto.CreateUserReq;
-import com.ssafy.enjoyTrip.user.model.dto.GetUserRes;
-import com.ssafy.enjoyTrip.user.model.dto.ModifyPwdReq;
-import com.ssafy.enjoyTrip.user.model.dto.ModifyUserReq;
+import com.ssafy.enjoyTrip.user.entity.dto.*;
+import com.ssafy.enjoyTrip.user.service.UserService;
+import com.ssafy.enjoyTrip.user.service.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
 /**
  * TODO : 소셜 로그인/로그아웃, 토큰 등 세션유지
  */
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-    private final UserProvider userProvider;
 
-    public UserController(UserProvider provider, UserService service) {
-        this.userProvider = provider;
+    public UserController(UserServiceImpl service) {
         this.userService = service;
     }
 
@@ -37,7 +35,9 @@ public class UserController {
     public ResponseEntity<?> join(@RequestBody @Valid CreateUserReq createUserReq) throws BaseException {
         userService.join(createUserReq);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity
+                .ok()
+                .build();
     }
 
     /**
@@ -47,7 +47,7 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<?> findAll() throws BaseException {
-        List<GetUserRes> userList =userProvider.findAll();
+        List<GetUserRes> userList =userService.findAll();
 
         return ResponseEntity
                 .ok()
@@ -55,12 +55,28 @@ public class UserController {
     }
 
     /**
-     * 로그인
+     * 로그인(세션)
      */
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginReq loginReq, HttpSession session) throws BaseException {
+        userService.login(loginReq, session);
+
+        return ResponseEntity
+                .ok()
+                .build();
+    }
 
     /**
-     * 로그아웃
+     * 로그아웃(세션)
      */
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) throws BaseException {
+        userService.logout(session);
+
+        return ResponseEntity
+                .ok()
+                .build();
+    }
 
     /**
      * 회원정보 조회
@@ -68,7 +84,7 @@ public class UserController {
      */
     @GetMapping("/{userId}")
     public ResponseEntity<?> findById(@PathVariable int userId) throws BaseException {
-        GetUserRes findUser = userProvider.findById(userId);
+        GetUserRes findUser = userService.findById(userId);
 
         return ResponseEntity
                 .ok()
@@ -85,7 +101,9 @@ public class UserController {
     public ResponseEntity<?> modifyUser(@RequestBody @Valid ModifyUserReq modifyUserReq) throws BaseException {
         userService.modifyUser(modifyUserReq);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity
+                .ok()
+                .build();
     }
 
     /**
@@ -96,7 +114,9 @@ public class UserController {
     public ResponseEntity<?> modifyPassword(@RequestBody @Valid ModifyPwdReq modifyPwdReq) throws BaseException {
         userService.modifyPassword(modifyPwdReq);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity
+                .ok()
+                .build();
     }
 
     /**
@@ -107,7 +127,9 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable int userId) throws BaseException {
         userService.deleteUser(userId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity
+                .ok()
+                .build();
     }
 
 //    /**
@@ -115,7 +137,7 @@ public class UserController {
 //     */
 //    @GetMapping("/byemail/{email}")
 //    public ResponseEntity<?> findByEmail(@PathVariable String email) throws BaseException {
-//        GetUserRes findUser = userProvider.findByEmail(email);
+//        GetUserRes findUser = userService.findByEmail(email);
 //
 //        return ResponseEntity
 //                .ok()
