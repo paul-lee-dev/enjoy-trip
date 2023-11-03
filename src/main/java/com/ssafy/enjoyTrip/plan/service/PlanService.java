@@ -2,6 +2,7 @@ package com.ssafy.enjoyTrip.plan.service;
 
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.plan.dao.PlanDao;
+import com.ssafy.enjoyTrip.plan.entity.PlanList;
 import com.ssafy.enjoyTrip.plan.entity.dto.*;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,6 @@ public class PlanService {
                 getPlanRes.setPlanlists(sortPlanLists(getPlanRes.getPlanlists(), getPlanRes.getOrderString()));
                 getPlanRes.setPageNo(pageNo);
             }
-//            System.out.println(getPlanRes);
             return getPlanRes;
         } catch (SQLException e) {
             e.printStackTrace();

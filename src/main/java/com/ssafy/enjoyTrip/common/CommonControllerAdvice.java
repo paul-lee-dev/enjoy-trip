@@ -23,7 +23,7 @@ public class CommonControllerAdvice {
 
         return ResponseEntity
                 .badRequest()
-                .body(new BaseResponse<>(e));
+                .body(new BaseResponse<>(e.getMessage()));
     }
 
     @ExceptionHandler({Exception.class})
