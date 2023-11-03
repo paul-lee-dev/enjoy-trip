@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoyTrip.board.dao.BoardMapper">
+
+    <!-- 게시판 생성 -->
+    <insert id="createBoard" parameterType="createBoardReq">
+        insert into board(user_id, subject, content)
+        values (#{userId}, #{subject}, #{content})
+    </insert>
+
+    <!-- 검색  -->
+    <sql id="search">
+        <if test="word != null and word != ''">
+            <if test="key == 'subject'">
+                subject like concat('%', #{word}, '%')
+            </if>
+            <if test="key != 'subject'">
+                ${key} = #{word}
+            </if>
+        </if>
+    </sql>
+
+    <select id="listBoard" parameterType="map" resultMap="GetBoardRes">
+        select article_id, user_id, subject, hit, created_at
+        from board
+        where
+        <include refid="search"></include>
+        order by article_id desc
+        limit #{start}, #{listsize}
+    </select>
+
+    <!-- 수정 -->
+    <update id="modifyBoard" parameterType="modifyBoardReq">
+        update board set subject = #{subject}, content = #{content},
+        where article_id = #{articleId}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="deleteBoard" parameterType="int">
+        delete from board
+        where article_id = #{articleId}
+    </delete>
+</mapper>
