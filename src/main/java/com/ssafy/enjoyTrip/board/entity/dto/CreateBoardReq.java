@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-
+import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,4 +15,8 @@ public class CreateBoardReq {
 
     @NotBlank(message="내용을 입력해주세요.")
     private String content;
+
+    private  int userId;
+
+//    private List<FileInfo> fileInfos;
 }

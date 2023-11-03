@@ -126,7 +126,6 @@ public class UserController {
     @PatchMapping("/pwd")
     public ResponseEntity<?> modifyPassword(@RequestBody @Valid ModifyPwdReq modifyPwdReq) throws BaseException {
         userService.modifyPassword(modifyPwdReq);
-
         return ResponseEntity
                 .ok()
                 .build();
@@ -140,7 +139,6 @@ public class UserController {
     @PostMapping("/delete/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable @ApiParam(required = true) int userId) throws BaseException {
         userService.deleteUser(userId);
-
         return ResponseEntity
                 .ok()
                 .build();

@@ -1,4 +1,4 @@
-package com.ssafy.enjoyTrip.plan.entity;
+package com.ssafy.enjoyTrip.plan.service.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

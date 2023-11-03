@@ -1,4 +1,4 @@
-package com.ssafy.enjoyTrip.plan.entity.dto;
+package com.ssafy.enjoyTrip.plan.service.entity.dto;
 
 import io.swagger.annotations.ApiParam;
 import lombok.Getter;
