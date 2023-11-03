@@ -1,6 +1,8 @@
 package com.ssafy.enjoyTrip.common;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,13 +20,15 @@ public class CommonControllerAdvice {
     // @Valid에서 발생할 예외
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<?> validationExceptionHandler(MethodArgumentNotValidException e) {
+
         return ResponseEntity
                 .badRequest()
-                .body(new BaseResponse<>(e));
+                .body(new BaseResponse<>(e.getMessage()));
     }
 
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<?> alLExceptionHandler(Exception e) {
+    public ResponseEntity<?> allExceptionHandler(Exception e) {
+        e.printStackTrace();
         return ResponseEntity
                 .internalServerError()
                 .build();

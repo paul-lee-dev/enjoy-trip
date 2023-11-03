@@ -1,6 +1,5 @@
 package com.ssafy.enjoyTrip.user.entity.dto;
 
-import com.ssafy.enjoyTrip.common.constant.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

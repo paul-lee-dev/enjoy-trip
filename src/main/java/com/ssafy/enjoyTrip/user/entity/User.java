@@ -1,6 +1,5 @@
 package com.ssafy.enjoyTrip.user.entity;
 
-import com.ssafy.enjoyTrip.common.constant.Role;
 import lombok.*;
 
 import java.time.LocalDateTime;

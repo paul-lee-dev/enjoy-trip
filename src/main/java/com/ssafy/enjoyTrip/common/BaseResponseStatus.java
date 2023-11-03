@@ -28,7 +28,7 @@ public enum BaseResponseStatus {
 
     // [회원가입] 중복
     DUPLICATED_EMAIL(3040, "이미 가입된 ID입니다."),
-    DUPLICATED_NICKNAME(3041, "중복된 nickname입니다");
+    DUPLICATED_NICKNAME(3041, "중복된 nickname입니다"),
 
 
     /**
@@ -40,9 +40,9 @@ public enum BaseResponseStatus {
      * 5xxx : board
      */
     /**
-     * 56xxx : plan
+     * 6xxx : plan
      */
-
+    WRONG_PLANID(6000, "여행 계획이 존재하지 않습니다.");
 
 
 

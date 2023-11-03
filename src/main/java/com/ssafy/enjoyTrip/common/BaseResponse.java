@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Getter
@@ -29,7 +30,7 @@ public class BaseResponse<T> {
 
     // @Valid 예외
     public BaseResponse(MethodArgumentNotValidException e) {
-        this.Status = 2000;
+        this.Status = HttpStatus.BAD_REQUEST.value();
         this.message = e.getMessage();
     }
 }

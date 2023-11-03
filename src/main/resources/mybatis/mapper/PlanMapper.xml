@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoyTrip.plan.dao.PlanMapper">
+
+    <!-- resultMaps -->
+
+    <resultMap type="GetPlanRes" id="getPlanMap">
+        <result column="plan_id"        property="planId"/>
+        <result column="user_id"    property="userId"/>
+        <result column="title"    property="title"/>
+        <result column="order_string"   property="orderString"/>
+        <collection property="planlists"    ofType="PlanListDto">
+            <result column="plan_list_id"   property="planListId"/>
+            <result column="attraction_id"  property="attractionId"/>
+        </collection>
+    </resultMap>
+    <!-- 조회 -->
+    <select id="getPlans" parameterType="GetPlansReq" resultType="GetPlansRes">
+        select plan_id, user_id, title
+        from plan
+        where (scope = 'PUBLIC'
+        <if test="userId != null">
+            or user_id = #{userId}
+        </if>
+        )
+        <if test="keyword != null">
+            and title like concat('%',#{keyword},'%')
+        </if>
+        limit #{start}, #{SIZE}
+    </select>
+
+    <select id="getPlanCnt" resultType="int">
+        select count(*) from plan;
+    </select>
+
+    <select id="getPlan" parameterType="int" resultMap="getPlanMap">
+        select p.plan_id, p.user_id, p.title, p.order_string,
+               pl.plan_list_id, pl.attraction_id
+        from plan p inner join plan_list pl on (p.plan_id = pl.plan_id)
+        where p.plan_id = #{planId}
+    </select>
+
+    <!-- 생성 -->
+    <insert id="createPlan" parameterType="CreatePlanReq">
+        insert into plan(user_id, scope, title)
+        values(#{userId}, #{scope}, #{title})
+    </insert>
+
+    <insert id="createPlanList" parameterType="CreatePlanListReq">
+        insert into plan_list(plan_id, attraction_id)
+        values(#{planId}, #{attractionId});
+
+        update plan
+        set order_string = concat(order_string, " ", (
+            select plan_list_id
+            from plan_list
+            where plan_id = #{planId}
+            order by plan_list_id desc
+            limit 1
+            ))
+        where plan_id = #{planId};
+    </insert>
+
+    <!-- 수정 -->
+    <update id="modifyOrder" parameterType="ModifyOrderReq">
+        update plan
+        set order_string = #{orderString}
+        where plan_id = #{planId}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="deletePlan" parameterType="int">
+        delete from plan where plan_id = #{planId}
+    </delete>
+
+    <delete id="deletePlanList" parameterType="int">
+        delete from plan_list where plan_list_id = #{planListId}
+    </delete>
+</mapper>
