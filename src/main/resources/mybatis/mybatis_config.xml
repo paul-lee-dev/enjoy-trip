@@ -16,11 +16,10 @@
         </environment>
     </environments>
 
-
-<!--    <mappers>-->
-<!--        <mapper resource="UserMapper.xml"/>-->
-<!--        <mapper resource="mapper/UserMapper.xml"/>-->
-<!--        <mapper resource="BoardMapper.xml"/>-->
-<!--        <mapper resource="mapper/BoardMapper.xml"/>-->
-<!--    </mappers>-->
+    <mappers>
+        <mapper resource="UserMapper.xml"/>
+        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="BoardMapper.xml"/>
+        <mapper resource="mapper/BoardMapper.xml"/>
+    </mappers>
 </configuration>
