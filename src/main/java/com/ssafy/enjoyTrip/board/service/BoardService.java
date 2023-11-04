@@ -5,7 +5,6 @@ import com.ssafy.enjoyTrip.board.entity.dto.GetBoardRes;
 import com.ssafy.enjoyTrip.board.entity.dto.ModifyBoardReq;
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.common.PageNavigation;
-
 import java.util.List;
 import java.util.Map;
 
