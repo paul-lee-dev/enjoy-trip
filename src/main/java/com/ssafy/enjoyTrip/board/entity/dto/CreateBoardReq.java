@@ -15,8 +15,6 @@ public class CreateBoardReq {
 
     @NotBlank(message="내용을 입력해주세요.")
     private String content;
-
     private  int userId;
-
 //    private List<FileInfo> fileInfos;
 }

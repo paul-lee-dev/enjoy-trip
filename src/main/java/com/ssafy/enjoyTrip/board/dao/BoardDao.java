@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface BoardDao {
     void createBoard(CreateBoardReq createBoardReq);
-    void registerFile(CreateBoardReq createBoardReq);
+//    void registerFile(CreateBoardReq createBoardReq);
     int getTotalBoardCount(Map<String, Object> param);
 
     void updateHit(int articleId);
