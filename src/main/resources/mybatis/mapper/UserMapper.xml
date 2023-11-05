@@ -15,7 +15,7 @@
     <select id="findById" parameterType="int" resultType="getUserRes">
         select user_id, email_id, password, first_name, last_name, nickname,
                created_at, phone_number, status
-        from user where user_id = #{userId}
+        from user where user_id = #{userId} and status != 'deleted'
     </select>
     <select id="findByEmail" parameterType="String" resultType="getUserRes">
         select user_id, email_id, password, first_name, last_name, nickname,
@@ -31,7 +31,7 @@
     <!-- 수정 -->
     <update id="modifyUser" parameterType="modifyUserReq">
         update user set email_id = #{emailId}, first_name = #{firstName},
-                        last_name = #{lastName}, phone_number = #{phoneNumber}
+                        last_name = #{lastName}, nickname = #{nickname}, phone_number = #{phoneNumber}
         where user_id = #{userId}
     </update>
 

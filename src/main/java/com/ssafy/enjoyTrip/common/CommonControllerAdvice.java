@@ -33,4 +33,11 @@ public class CommonControllerAdvice {
                 .internalServerError()
                 .build();
     }
+
+    @ExceptionHandler({NumberFormatException.class})
+    public ResponseEntity<?> swaggerAlertHandler(NumberFormatException e) {
+        return ResponseEntity
+                .ok()
+                .build();
+    }
 }

@@ -4,11 +4,15 @@ import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.common.BaseResponse;
 import com.ssafy.enjoyTrip.plan.entity.dto.*;
 import com.ssafy.enjoyTrip.plan.service.PlanService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(value="Plan API")
 @RestController
 @RequestMapping("/plans")
 public class PlanController {
@@ -26,9 +30,11 @@ public class PlanController {
      * @param keyword, pageNo
      * @throws BaseException
      */
+    @ApiOperation(value="여행계획 목록 반환")
     @GetMapping
-    public ResponseEntity<?> getPlans(@RequestParam(required = false) String keyword, @RequestParam(required = false) Integer pageNo,
-                                      @RequestParam(required = false) Integer userId) throws BaseException {
+    public ResponseEntity<?> getPlans(@ApiParam(value = "검색어") @RequestParam(required = false) String keyword,
+                                      @ApiParam(value = "페이지 번호") @RequestParam(required = false) Integer pageNo,
+                                      @ApiParam(value = "'내 계획 보기' 시 필요한 유저 id") @RequestParam(required = false) Integer userId) throws BaseException {
         GetPlansReq getPlansReq = new GetPlansReq(keyword, pageNo, userId);
         List<GetPlansRes> plans = planService.getPlans(getPlansReq);
 
@@ -40,6 +46,7 @@ public class PlanController {
     /**
      * plan 목록으로 첫 이동 시, 페이지 버튼 만들 때 쓰일 데이터
      */
+    @ApiOperation(value="plan 목록으로 첫 이동 시, 페이지 버튼 생성 때 쓸 데이터(페이지 수) 반환")
     @GetMapping("/pagecnt")
     public ResponseEntity<?> getPageCnt() throws BaseException {
         return ResponseEntity
@@ -47,6 +54,7 @@ public class PlanController {
                 .body(new BaseResponse<>(planService.getPageCnt()));
     }
 
+    @ApiOperation(value="여행계획 상세조회")
     @GetMapping("/{planId}")
     public ResponseEntity<?> getPlan(@PathVariable int planId, @RequestParam int pageNo) throws BaseException {
         return ResponseEntity
@@ -56,6 +64,7 @@ public class PlanController {
 
     // create
 
+    @ApiOperation(value="계획 생성")
     @PostMapping
     public ResponseEntity<?> createPlan(@RequestBody CreatePlanReq createPlanReq) throws BaseException {
         planService.createPlan(createPlanReq);
@@ -64,6 +73,7 @@ public class PlanController {
                 .build();
     }
 
+    @ApiOperation(value="관광지 추가")
     @PostMapping("/planlist")
     public ResponseEntity<?> createPlanList(@RequestBody CreatePlanListReq createPlanListReq) throws BaseException {
         planService.createPlanList(createPlanListReq);
@@ -73,7 +83,7 @@ public class PlanController {
     }
 
     // update
-
+    @ApiOperation(value="여행 계획 - 방문할 관광지 순서 수정")
     @PatchMapping
     public ResponseEntity<?> modifyOrder(@RequestBody ModifyOrderReq modifyOrderReq) throws BaseException {
         planService.modifyOrder(modifyOrderReq);
@@ -83,6 +93,7 @@ public class PlanController {
     }
 
     // delete
+    @ApiOperation(value="여행 계획 삭제")
     @DeleteMapping("/{planId}")
     public ResponseEntity<?> deletePlan(@PathVariable int planId) throws BaseException {
         planService.deletePlan(planId);
@@ -91,7 +102,8 @@ public class PlanController {
                 .build();
     }
 
-    @DeleteMapping("/planlist/{planlistId}")
+    @ApiOperation(value="계획에 담긴 관광지(planlist) 삭제")
+    @DeleteMapping("/planlist/{planListId}")
     public ResponseEntity<?> deletePlanList(@PathVariable int planListId) throws BaseException {
         planService.deletePlanList(planListId);
         return ResponseEntity

@@ -19,7 +19,7 @@ import java.util.Set;
 public class SwaggerConfig {
 
     private String version = "V1";
-    private String title = "EnjoyTrip_Spring" + version;
+    private String title = "EnjoyTrip_Spring" + "_" +  version;
 
 
     @Bean

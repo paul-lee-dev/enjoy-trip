@@ -2,13 +2,11 @@ package com.ssafy.enjoyTrip.plan.entity.dto;
 
 import com.ssafy.enjoyTrip.common.constant.Scope;
 import com.ssafy.enjoyTrip.plan.entity.PlanList;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
+@ToString
 @Getter
 @NoArgsConstructor
 public class GetPlanRes {
