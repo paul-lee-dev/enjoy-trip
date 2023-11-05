@@ -5,16 +5,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class ModifyBoardReq {
-    @NotBlank(message="article_id is null")
+    @NotNull(message="article_id is null")
     private int articleId;
 
-    @NotBlank(message="user_id is null")
+    @NotNull(message="user_id is null")
     private int userId;
 
     @NotBlank(message="제목을 입력해주세요.")

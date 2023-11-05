@@ -1,6 +1,6 @@
 package com.ssafy.enjoyTrip.plan.dao;
 
-import com.ssafy.enjoyTrip.plan.service.entity.dto.*;
+import com.ssafy.enjoyTrip.plan.entity.dto.*;
 
 import java.sql.SQLException;
 import java.util.List;

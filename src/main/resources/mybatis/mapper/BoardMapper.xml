@@ -42,15 +42,22 @@
 <!--    </insert>-->
 
     <!-- 검색  -->
+    <select id="getBoard" parameterType="int" resultType="GetBoardRes">
+        select article_id, user_id, subject, content, hit, created_at
+        from board
+        where article_id = #{article_id}
+    </select>
+
     <sql id="search">
         <if test="word != null and word != ''">
             <if test="key == 'subject'">
-                subject like concat('%', #{word}, '%')
+                subject like concat('%', #{word}, '%') and
             </if>
             <if test="key != 'subject'">
-                ${key} = #{word}
+                ${key} = #{word} and
             </if>
         </if>
+        true
     </sql>
 
     <select id="listBoard" parameterType="map" resultType="GetBoardRes">

@@ -14,12 +14,12 @@ public class GetSpotRes{
         private String tel;
         private String image;
         private String hit;
-        private String theme;
+//        private String theme;
         private String contentId;
         private String lat;
-        private String lang;
+        private String lon;
         private String sidoId;
         private String gugunId;
-        private String desc;
-        private String memo;
+        private String description;
+//        private String memo;
 }

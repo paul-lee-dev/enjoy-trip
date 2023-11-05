@@ -17,7 +17,7 @@ public class SpotServiceImpl implements SpotService{
 
     public SpotServiceImpl(SpotDao spotDao) { this.spotDao = spotDao; }
 
-    public List<GetSpotRes> getSpotList(Map<String, Integer> map) throws BaseException {
+    public List<GetSpotRes> getSpotList(Map<String, String> map) throws BaseException {
         List<GetSpotRes> spots;
         try {
             spots = spotDao.getSpotList(map);
@@ -28,16 +28,16 @@ public class SpotServiceImpl implements SpotService{
         return spots;
     }
 
-    public List<GetSpotRes> searchSpot(String keyword) throws BaseException {
-        List<GetSpotRes> spots;
-        try {
-            spots = spotDao.searchSpot(keyword);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BaseException(DB_ERROR);
-        }
-        return spots;
-    }
+//    public List<GetSpotRes> searchSpot(String keyword) throws BaseException {
+//        List<GetSpotRes> spots;
+//        try {
+//            spots = spotDao.searchSpot(keyword);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new BaseException(DB_ERROR);
+//        }
+//        return spots;
+//    }
 
     public GetSpotRes getSpot(int spotId) throws BaseException {
         GetSpotRes spot;

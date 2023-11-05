@@ -2,8 +2,8 @@ package com.ssafy.enjoyTrip.plan;
 
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.common.BaseResponse;
+import com.ssafy.enjoyTrip.plan.entity.dto.*;
 import com.ssafy.enjoyTrip.plan.service.PlanService;
-import com.ssafy.enjoyTrip.plan.service.entity.dto.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
