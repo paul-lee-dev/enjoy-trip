@@ -1,4 +1,4 @@
-package com.ssafy.enjoyTrip.plan.service.entity.dto;
+package com.ssafy.enjoyTrip.plan.entity.dto;
 
 import com.ssafy.enjoyTrip.common.constant.Scope;
 import lombok.Getter;

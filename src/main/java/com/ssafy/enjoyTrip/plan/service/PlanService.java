@@ -2,7 +2,7 @@ package com.ssafy.enjoyTrip.plan.service;
 
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.plan.dao.PlanDao;
-import com.ssafy.enjoyTrip.plan.service.entity.dto.*;
+import com.ssafy.enjoyTrip.plan.entity.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
