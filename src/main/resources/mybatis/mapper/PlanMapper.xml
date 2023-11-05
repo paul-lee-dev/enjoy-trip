@@ -37,7 +37,7 @@
     <select id="getPlan" parameterType="int" resultMap="getPlanMap">
         select p.plan_id, p.user_id, p.title, p.order_string,
                pl.plan_list_id, pl.attraction_id
-        from plan p inner join plan_list pl on (p.plan_id = pl.plan_id)
+        from plan p left join plan_list pl on (p.plan_id = pl.plan_id)
         where p.plan_id = #{planId}
     </select>
 

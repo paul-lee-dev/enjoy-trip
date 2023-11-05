@@ -55,6 +55,7 @@ public class PlanService {
                 getPlanRes.setPlanlists(sortPlanLists(getPlanRes.getPlanlists(), getPlanRes.getOrderString()));
                 getPlanRes.setPageNo(pageNo);
             }
+//            System.out.println(getPlanRes);
             return getPlanRes;
         } catch (SQLException e) {
             e.printStackTrace();

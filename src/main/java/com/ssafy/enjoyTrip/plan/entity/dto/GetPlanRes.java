@@ -1,5 +1,7 @@
 package com.ssafy.enjoyTrip.plan.entity.dto;
 
+import com.ssafy.enjoyTrip.common.constant.Scope;
+import com.ssafy.enjoyTrip.plan.entity.PlanList;
 import lombok.*;
 
 import java.util.List;
