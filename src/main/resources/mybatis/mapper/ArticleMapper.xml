@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ssafy.enjoyTrip.board.dao.BoardMapper">
+<mapper namespace="com.ssafy.enjoyTrip.article.dao.ArticleMapper">
 
-<!--    <resultMap type="GetBoardRes" id="board">-->
+<!--    <resultMap type="GetArticleRes" id="article">-->
 <!--        <result column="article_id" property="articleId"/>-->
 <!--        <result column="user_id" property="userId"/>-->
 <!--        <result column="subject" property="subject"/>-->
@@ -13,7 +13,7 @@
 <!--        <result column="updated_at" property="updatedAt"/>-->
 <!--    </resultMap>-->
 
-<!--    <resultMap type="GetBoardRes" id="viewBoard" extends="board">-->
+<!--    <resultMap type="GetArticleRes" id="viewArticle" extends="article">-->
 <!--        <collection property="fileInfos" column="article_id" javaType="list" ofType="fileInfo" select="fileInfoList"/>-->
 <!--    </resultMap>-->
 
@@ -24,8 +24,8 @@
 <!--    </resultMap>-->
 
     <!-- 게시판 생성 -->
-    <insert id="createBoard" parameterType="CreateBoardReq">
-        insert into board (user_id, subject, content)
+    <insert id="createArticle" parameterType="CreateArticleReq">
+        insert into article (user_id, subject, content)
         values (#{userId}, #{subject}, #{content})
 <!--        <selectKey resultType="int" keyProperty="articleId" order="AFTER">-->
 <!--            select last_insert_id()-->
@@ -33,7 +33,7 @@
     </insert>
 
 <!--    &lt;!&ndash; 파일 등록 &ndash;&gt;-->
-<!--    <insert id="registerFile" parameterType="CreateBoardReq">-->
+<!--    <insert id="registerFile" parameterType="CreateArticleReq">-->
 <!--        insert into file_info (article_id, save_folder, original_file, save_file)-->
 <!--        values-->
 <!--        <foreach collection="fileInfos" item="fileinfo" separator=" , ">-->
@@ -42,10 +42,10 @@
 <!--    </insert>-->
 
     <!-- 검색  -->
-    <select id="getBoard" parameterType="int" resultType="GetBoardRes">
+    <select id="getArticle" parameterType="int" resultType="GetArticleRes">
         select article_id, user_id, subject, content, hit, created_at
-        from board
-        where article_id = #{article_id}
+        from article
+        where article_id = #{articleId}
     </select>
 
     <sql id="search">
@@ -60,9 +60,9 @@
         true
     </sql>
 
-    <select id="listBoard" parameterType="map" resultType="GetBoardRes">
+    <select id="listArticle" parameterType="map" resultType="GetArticleRes">
         select article_id, user_id, subject, hit, created_at
-        from board
+        from article
         where
         <include refid="search"></include>
         order by article_id desc
@@ -70,21 +70,21 @@
     </select>
 
     <!-- 수정 -->
-    <update id="modifyBoard" parameterType="ModifyBoardReq">
-        update board set subject = #{subject}, content = #{content}
+    <update id="modifyArticle" parameterType="ModifyArticleReq">
+        update article set subject = #{subject}, content = #{content}
                          where article_id = #{articleId}
     </update>
 
     <!-- 조회 수 -->
     <update id="updateHit" parameterType="int">
-        update board
+        update article
         set hit = hit + 1
         where article_id = #{articleId}
     </update>
 
     <!-- 삭제 -->
-    <delete id="deleteBoard" parameterType="int">
-        delete from board
+    <delete id="deleteArticle" parameterType="int">
+        delete from article
         where article_id = #{articleId}
     </delete>
 </mapper>
