@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static com.ssafy.enjoyTrip.common.BaseResponseStatus.DB_ERROR;
-import static com.ssafy.enjoyTrip.common.BaseResponseStatus.WRONG_PLANID;
 import static com.ssafy.enjoyTrip.common.constant.Constants.PAGE_SIZE;
 
 @Service
@@ -24,7 +23,6 @@ public class PlanService {
     public List<GetPlansRes> getPlans(GetPlansReq getPlansReq) throws BaseException {
         try {
             if (getPlansReq.getPageNo() == null) getPlansReq.setPageNo(1);
-
             int pageNo = getPlansReq.getPageNo();
             getPlansReq.setStart((pageNo-1) * PAGE_SIZE);
             return planDao.getPlans(getPlansReq);
@@ -94,7 +92,6 @@ public class PlanService {
      */
     public void modifyOrder(ModifyOrderReq modifyOrderReq) throws BaseException {
         try {
-            checkPlanExist(modifyOrderReq.getPlanId());
 
             planDao.modifyOrder(modifyOrderReq);
         } catch (SQLException e) {
@@ -105,8 +102,6 @@ public class PlanService {
 
     public void deletePlan(int planId) throws BaseException {
         try {
-            checkPlanExist(planId);
-
             planDao.deletePlan(planId);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -142,7 +137,4 @@ public class PlanService {
         return result;
     }
 
-    private void checkPlanExist(int planId) throws BaseException {
-        if (getPlan(planId, 1) == null) throw new BaseException(WRONG_PLANID);
-    }
 }

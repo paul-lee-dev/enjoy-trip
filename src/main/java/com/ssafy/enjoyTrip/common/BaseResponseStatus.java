@@ -28,10 +28,10 @@ public enum BaseResponseStatus {
 
     // [회원가입] 중복
     DUPLICATED_EMAIL(3040, "이미 가입된 ID입니다."),
-    DUPLICATED_NICKNAME(3041, "중복된 nickname입니다");
+    DUPLICATED_NICKNAME(3041, "중복된 nickname입니다"),
 
     // login
-    NEED_LOGIN(3050, "로그인이 필요합니다."),
+    NEED_LOGIN(3050, "로그인이 필요합니다.");
 
 
     /**

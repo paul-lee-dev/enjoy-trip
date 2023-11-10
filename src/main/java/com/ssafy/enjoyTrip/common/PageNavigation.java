@@ -106,5 +106,4 @@ public class PageNavigation {
         builder.append("		</ul> \n");
         this.navigator = builder.toString();
     }
-
 }
