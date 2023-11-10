@@ -1,4 +1,4 @@
-package com.ssafy.enjoyTrip.board.entity.dto;
+package com.ssafy.enjoyTrip.article.entity.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -6,12 +6,11 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class ModifyBoardReq {
+public class ModifyArticleReq {
     @NotNull(message="article_id is null")
     private int articleId;
 

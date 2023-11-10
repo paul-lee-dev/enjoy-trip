@@ -1,19 +1,13 @@
-package com.ssafy.enjoyTrip.board.entity.dto;
+package com.ssafy.enjoyTrip.article.entity.dto;
 
 import lombok.*;
-
-import java.util.List;
-
-import java.util.List;
-
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GetBoardRes {
+public class GetArticleRes {
     private int articleId;
     private int userId;
     private String subject;

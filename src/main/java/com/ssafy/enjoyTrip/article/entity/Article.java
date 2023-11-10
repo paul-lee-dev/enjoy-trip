@@ -1,4 +1,4 @@
-package com.ssafy.enjoyTrip.board.entity;
+package com.ssafy.enjoyTrip.article.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class Board {
+public class Article {
     private int articleId;
     private int userId;
     private String subject;

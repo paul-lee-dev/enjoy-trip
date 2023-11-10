@@ -1,4 +1,4 @@
-package com.ssafy.enjoyTrip.board.entity.dto;
+package com.ssafy.enjoyTrip.article.entity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

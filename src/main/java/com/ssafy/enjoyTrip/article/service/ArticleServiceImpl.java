@@ -1,17 +1,15 @@
-package com.ssafy.enjoyTrip.board.service;
+package com.ssafy.enjoyTrip.article.service;
 
-import com.ssafy.enjoyTrip.board.dao.BoardDao;
-import com.ssafy.enjoyTrip.board.entity.dto.FileInfo;
-import com.ssafy.enjoyTrip.board.entity.dto.CreateBoardReq;
-import com.ssafy.enjoyTrip.board.entity.dto.GetBoardRes;
-import com.ssafy.enjoyTrip.board.entity.dto.ModifyBoardReq;
+import com.ssafy.enjoyTrip.article.dao.ArticleDao;
+import com.ssafy.enjoyTrip.article.entity.dto.CreateArticleReq;
+import com.ssafy.enjoyTrip.article.entity.dto.GetArticleRes;
+import com.ssafy.enjoyTrip.article.entity.dto.ModifyArticleReq;
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.common.PageNavigation;
 import com.ssafy.enjoyTrip.common.constant.SizeConstant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,21 +17,21 @@ import java.util.Map;
 import static com.ssafy.enjoyTrip.common.BaseResponseStatus.DB_ERROR;
 
 @Service
-public class BoardServiceImpl implements BoardService{
+public class ArticleServiceImpl implements ArticleService {
 
-    private final BoardDao boardDao;
-    public BoardServiceImpl(BoardDao boardDao){ this.boardDao = boardDao; }
+    private final ArticleDao articleDao;
+    public ArticleServiceImpl(ArticleDao articleDao){ this.articleDao = articleDao; }
 
     /**
      * 게시판 글 등록
-     * @param createBoardReq
+     * @param createArticleReq
      * @throws BaseException
      */
     @Transactional
-    public void createBoard(CreateBoardReq createBoardReq) throws BaseException {
-//        List<FileInfo> fileInfos = createBoardReq.getFileInfos();
+    public void createArticle(CreateArticleReq createArticleReq) throws BaseException {
+//        List<FileInfo> fileInfos = createArticleReq.getFileInfos();
         try {
-            boardDao.createBoard(createBoardReq);
+            articleDao.createArticle(createArticleReq);
         } catch (Exception e){
             e.printStackTrace();
             throw new BaseException(DB_ERROR);
@@ -41,7 +39,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public List<GetBoardRes> listBoard(Map<String, String> map) throws Exception {
+    public List<GetArticleRes> listArticle(Map<String, String> map) throws Exception {
         Map<String, Object> param = new HashMap<String, Object>();
         String key = map.get("key");
         if("userId".equals(key))
@@ -53,7 +51,7 @@ public class BoardServiceImpl implements BoardService{
         param.put("start", start);
         param.put("listsize", SizeConstant.LIST_SIZE);
 
-        return boardDao.listBoard(param);
+        return articleDao.listArticle(param);
     }
 
     @Override
@@ -72,7 +70,7 @@ public class BoardServiceImpl implements BoardService{
             key = "user_id";
         param.put("key", key == null ? "" : key);
         param.put("word", map.get("word") == null ? "" : map.get("word"));
-        int totalCount = boardDao.getTotalBoardCount(param);
+        int totalCount = articleDao.getTotalArticleCount(param);
         pageNavigation.setTotalCount(totalCount);
         int totalPageCount = (totalCount - 1) / sizePerPage + 1;
         pageNavigation.setTotalPageCount(totalPageCount);
@@ -86,25 +84,25 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public GetBoardRes getBoard(int articleId) throws Exception {
-        return boardDao.getBoard(articleId);
+    public GetArticleRes getArticle(int articleId) throws Exception {
+        return articleDao.getArticle(articleId);
     }
 
     @Override
     public void updateHit(int articleId) throws Exception {
-        boardDao.updateHit(articleId);
+        articleDao.updateHit(articleId);
     }
 
     @Override
-    public void modifyBoard(ModifyBoardReq modifyBoardReq) throws BaseException {
-        boardDao.modifyBoard(modifyBoardReq);
+    public void modifyArticle(ModifyArticleReq modifyArticleReq) throws BaseException {
+        articleDao.modifyArticle(modifyArticleReq);
     }
 
     @Override
-    public void deleteBoard(int articleId) throws BaseException {
-//        List<FileInfo> fileList = boardDao.fileInfoList(articleId);
-        boardDao.deleteBoard(articleId);
-//        boardDao.deleteFile(articleId);
+    public void deleteArticle(int articleId) throws BaseException {
+//        List<FileInfo> fileList = articleDao.fileInfoList(articleId);
+        articleDao.deleteArticle(articleId);
+//        articleDao.deleteFile(articleId);
 //        for(FileInfo fileInfo : fileList) {
 //            File file = new File(path + File.separator + fileInfo.getSaveFolder() + File.separator + fileInfo.getSaveFile());
 //            file.delete();
