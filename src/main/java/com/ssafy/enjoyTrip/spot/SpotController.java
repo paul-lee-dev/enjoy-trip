@@ -20,7 +20,7 @@ import static com.ssafy.enjoyTrip.common.constant.Constants.PAGE_SIZE;
 
 @Api(value = "Spot API")
 @RestController
-@CrossOrigin(value = "*")
+@CrossOrigin(origins = {"*"})//다른 서버에서 AJax 요청이 와도 서비스 되도록 설정
 @RequestMapping("/spot")
 public class SpotController {
     private final SpotService spotService;

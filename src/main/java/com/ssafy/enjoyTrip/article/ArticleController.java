@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Api(value = "Article API")
+@CrossOrigin(origins = {"*"})//다른 서버에서 AJax 요청이 와도 서비스 되도록 설정
 @RestController
 @RequestMapping("/articles")
 public class ArticleController {
