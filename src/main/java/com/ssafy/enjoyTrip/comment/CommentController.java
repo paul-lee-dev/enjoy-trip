@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -38,7 +37,8 @@ public class CommentController {
     }
 
     @ApiOperation(value = "댓글 조회")
-    @GetMapping
+    @GetMapping("/{articleId}")
+    @Transactional
     public ResponseEntity<?> listComment(@PathVariable @ApiParam(value = "조회할 댓글의 글 id", required = true) int articleId) throws Exception {
         List<GetCommentRes> commentList = commentService.listComment(articleId);
         return ResponseEntity

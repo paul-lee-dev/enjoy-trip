@@ -3,37 +3,30 @@
 
 <mapper namespace="com.ssafy.enjoyTrip.comment.dao.CommentMapper">
 
-
     <!-- 댓글 생성 -->
     <insert id="createComment" parameterType="CreateCommentReq">
-
+        <choose>
+    <when test="parentCommentId != null">
+        insert into comment (user_id, parent_comment_id,article_id, content)
+        values (#{userId},  #{parentCommentId},#{subject}, #{content})
+    </when>
+    <otherwise>
         insert into comment (user_id, article_id, content)
-<!--        <if test="parentCommentId != null">-->
-<!--                ,-->
-        values (#{userId}, #{subject}, #{content})
-
+        values (#{userId},#{subject}, #{content})
+    </otherwise>
+        </choose>
     </insert>
 
     <select id="listComment" parameterType="map" resultType="GetCommentRes">
-        select comment_id, user_id, subject, hit, created_at
+        select comment_id, user_id, subject, created_at
         from comment
-        where
-        <include refid="search"></include>
-        order by comment_id desc
-        limit #{start}, #{listsize}
+        where article_id = #{articleId}
     </select>
 
     <!-- 수정 -->
     <update id="modifyComment" parameterType="ModifyCommentReq">
         update comment set subject = #{subject}, content = #{content}
                          where comment_id = #{commentId}
-    </update>
-
-    <!-- 조회 수 -->
-    <update id="updateHit" parameterType="int">
-        update comment
-        set hit = hit + 1
-        where comment_id = #{commentId}
     </update>
 
     <!-- 삭제 -->
