@@ -15,8 +15,7 @@ public class CreateCommentReq {
     private int articleId;
 
     private int parentCommentId;
-    @NotBlank(message="내용을 입력해주세요.")
+//    @NotBlank(message="내용을 입력해주세요.")
     private String content;
-    @NotBlank(message="내용을 입력해주세요.")
     private int userId;
 }

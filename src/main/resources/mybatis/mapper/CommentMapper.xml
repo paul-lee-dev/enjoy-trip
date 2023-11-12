@@ -8,24 +8,24 @@
         <choose>
     <when test="parentCommentId != null">
         insert into comment (user_id, parent_comment_id,article_id, content)
-        values (#{userId},  #{parentCommentId},#{subject}, #{content})
+        values (#{userId},  #{parentCommentId},#{articleId}, #{content})
     </when>
     <otherwise>
         insert into comment (user_id, article_id, content)
-        values (#{userId},#{subject}, #{content})
+        values (#{userId},#{articleId}, #{content})
     </otherwise>
         </choose>
     </insert>
 
     <select id="listComment" parameterType="map" resultType="GetCommentRes">
-        select comment_id, user_id, subject, created_at
+        select comment_id, user_id, content, created_at
         from comment
         where article_id = #{articleId}
     </select>
 
     <!-- 수정 -->
     <update id="modifyComment" parameterType="ModifyCommentReq">
-        update comment set subject = #{subject}, content = #{content}
+        update comment set  content = #{content}
                          where comment_id = #{commentId}
     </update>
 

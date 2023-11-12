@@ -45,6 +45,7 @@ public class ArticleController {
         Map<String, String> map = new HashMap<>();
         map.put("pgno", ""+pgno);
         if (key != null) map.put("key", key);
+        if (key.equals("userId")) map.put("key", "user_id");
         if (word != null) map.put("word", word);
         articleService.listArticle(map);
 
