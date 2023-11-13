@@ -59,8 +59,10 @@ public class ArticleController {
                                        @ApiParam(value="검색어") @RequestParam(required=false) String word) throws Exception {
         Map<String, String> map = new HashMap<>();
         map.put("pgno", ""+pgno);
-        if (key != null) map.put("key", key);
-        if (key.equals("userId")) map.put("key", "user_id");
+        if (key != null) {
+            if (key.equals("userId")) map.put("key", "user_id");
+            else map.put("key", key);
+        }
         if (word != null) map.put("word", word);
         articleService.listArticle(map);
 

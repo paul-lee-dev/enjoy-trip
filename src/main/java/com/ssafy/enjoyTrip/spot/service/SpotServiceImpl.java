@@ -2,6 +2,8 @@ package com.ssafy.enjoyTrip.spot.service;
 
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.spot.dao.SpotDao;
+import com.ssafy.enjoyTrip.spot.entity.dto.GugunDto;
+import com.ssafy.enjoyTrip.spot.entity.dto.SidoDto;
 import com.ssafy.enjoyTrip.spot.entity.dto.GetSpotRes;
 import org.springframework.stereotype.Service;
 
@@ -28,16 +30,18 @@ public class SpotServiceImpl implements SpotService{
         return spots;
     }
 
-//    public List<GetSpotRes> searchSpot(String keyword) throws BaseException {
-//        List<GetSpotRes> spots;
-//        try {
-//            spots = spotDao.searchSpot(keyword);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new BaseException(DB_ERROR);
-//        }
-//        return spots;
-//    }
+    @Override
+    public List<GetSpotRes> searchSpot(String keyword) throws BaseException {
+        List<GetSpotRes> spots;
+        try {
+            spots = spotDao.searchSpot(keyword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
+        return spots;
+    }
+
 
     public GetSpotRes getSpot(int spotId) throws BaseException {
         GetSpotRes spot;
@@ -50,7 +54,7 @@ public class SpotServiceImpl implements SpotService{
         return spot;
     }
 
-    public List<String[]> getSidoList() throws BaseException {
+    public List<SidoDto> getSidoList() throws BaseException {
         try {
             return spotDao.getSidoList();
         } catch (Exception e) {
@@ -59,8 +63,8 @@ public class SpotServiceImpl implements SpotService{
         }
     }
 
-    public List<String[]> getGugunList(int sidoId) throws BaseException {
-        List<String[]> guguns;
+    public List<GugunDto> getGugunList(int sidoId) throws BaseException {
+        List<GugunDto> guguns;
         try {
             guguns = spotDao.getGugunList(sidoId);
         } catch (Exception e){

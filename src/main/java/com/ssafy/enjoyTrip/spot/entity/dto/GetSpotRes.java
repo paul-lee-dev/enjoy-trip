@@ -18,8 +18,8 @@ public class GetSpotRes{
         private String contentId;
         private String lat;
         private String lon;
-        private String sidoId;
-        private String gugunId;
+        private String sidoCode;
+        private String gugunCode;
         private String description;
 //        private String memo;
 }
