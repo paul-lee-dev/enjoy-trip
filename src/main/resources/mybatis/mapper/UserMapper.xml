@@ -20,12 +20,18 @@
     <select id="findByEmail" parameterType="String" resultType="getUserRes">
         select user_id, email_id, password, first_name, last_name, nickname,
                created_at, phone_number, status
-        from user where email_id = #{email}
+        from user where email_id = #{email} and status != 'deleted'
+    </select>
+    <select id="findByNickname" parameterType="String" resultType="getUserRes">
+        select user_id, email_id, password, first_name, last_name, nickname,
+               created_at, phone_number, status
+        from user where nickname = #{nickname} and status != 'deleted'
     </select>
     <select id = "findAll" resultType="getUserRes">
         select user_id, email_id, password, first_name, last_name, nickname,
                        created_at, phone_number, status
-                from user
+        from user
+        where status != 'deleted'
     </select>
 
     <!-- 수정 -->

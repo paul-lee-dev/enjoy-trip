@@ -19,7 +19,7 @@ import java.util.List;
  * TODO : 소셜 로그인/로그아웃, 토큰 등 세션유지
  */
 @Api(value="User API")
-@CrossOrigin(origins = {"*"})//다른 서버에서 AJax 요청이 와도 서비스 되도록 설정
+@CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -34,11 +34,6 @@ public class UserController {
      * 회원가입
      * @param createUserReq
      */
-    @ApiOperation(value="회원가입")
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "입력값 형식 불일치"),
-            @ApiResponse(code = 500, message = "서버 에러")
-    })
     @PostMapping
     public ResponseEntity<?> join(@RequestBody @Valid CreateUserReq createUserReq) throws BaseException {
         userService.join(createUserReq);
@@ -66,7 +61,6 @@ public class UserController {
     /**
      * 로그인(세션)
      */
-    @ApiOperation(value="로그인(세션)")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginReq loginReq, HttpSession session) throws BaseException {
         userService.login(loginReq, session);
@@ -91,9 +85,9 @@ public class UserController {
      * 회원정보 조회
      * @param userId
      */
-    @ApiOperation(value="단일 회원 상세정보 조회")
+    @ApiOperation(value="Id를 이용한 회원정보 검색")
     @GetMapping("/{userId}")
-    public ResponseEntity<?> findById(@PathVariable @ApiParam(value="조회할 유저 id", required = true)
+    public ResponseEntity<?> findById(@PathVariable @ApiParam(required = true)
                                           int userId) throws BaseException {
         GetUserRes findUser = userService.findById(userId);
 
@@ -135,7 +129,6 @@ public class UserController {
      * 회원탈퇴
      * @param userId
      */
-    @ApiOperation(value="회원 탈퇴")
     @PostMapping("/delete/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable @ApiParam(required = true) int userId) throws BaseException {
         userService.deleteUser(userId);

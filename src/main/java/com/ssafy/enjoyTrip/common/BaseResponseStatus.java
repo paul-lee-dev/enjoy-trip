@@ -22,12 +22,12 @@ public enum BaseResponseStatus {
 
     // mismatch
     WRONG_EMAIL(3030, "유저 정보가 존재하지 않습니다."),
-    WRONG_PASSWORD(3031, "잘못된 비밀번호입니다."),
+    WRONG_PASSWORD(3031, "비밀번호가 일치하지 않습니다."),
     WRONG_PASSCHECK(3032, "재입력 비밀번호가 일치하지 않습니다."),
     WRONG_ID(3032, "유저 정보가 존재하지 않습니다."),
 
     // [회원가입] 중복
-    DUPLICATED_EMAIL(3040, "이미 가입된 ID입니다."),
+    DUPLICATED_EMAIL(3040, "이미 가입된 이메일입니다."),
     DUPLICATED_NICKNAME(3041, "중복된 nickname입니다"),
 
     // login

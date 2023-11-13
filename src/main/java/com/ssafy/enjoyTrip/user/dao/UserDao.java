@@ -11,6 +11,7 @@ public interface UserDao {
     void createUser(CreateUserReq createUserReq);
     GetUserRes findById(int userId);
     GetUserRes findByEmail(String email);
+    GetUserRes findByNickname(String nickname);
     void modifyUser(ModifyUserReq modifyUserReq);
     void modifyPassword(ModifyPwdReq modifyPwdReq);
     void deleteUser(int userId);

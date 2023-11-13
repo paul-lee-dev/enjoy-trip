@@ -3,11 +3,13 @@ package com.ssafy.enjoyTrip.user.entity.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+@ToString
 @Getter @Setter
 @NoArgsConstructor
 public class ModifyUserReq {

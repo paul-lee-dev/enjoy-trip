@@ -7,6 +7,7 @@ import com.ssafy.enjoyTrip.user.entity.dto.*;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.ssafy.enjoyTrip.common.BaseResponseStatus.*;
@@ -42,10 +43,10 @@ public class UserServiceImpl implements UserService
      */
     public void join(CreateUserReq createUserReq) throws BaseException {
         // 재입력 비밀번호 체크
-        if (!createUserReq.getPassword().equals(createUserReq.getPasswordCheck()))
-            throw new BaseException(WRONG_PASSCHECK);
-        // 이메일 중복 체크
-        checkUniqueEmail(createUserReq.getEmailId());
+        checkRetypePassword(createUserReq.getPassword(), createUserReq.getPasswordCheck());
+        // 이메일, 닉네임 중복 체크
+        checkUniqueEmail(-1, createUserReq.getEmailId());
+        checkUniqueNickname(-1, createUserReq.getNickname());
 
         try {
             userDao.createUser(createUserReq);
@@ -60,17 +61,12 @@ public class UserServiceImpl implements UserService
      * @param loginReq, session
      * @throws BaseException
      */
-    public void login(LoginReq loginReq, HttpSession session) throws BaseException {
-        try {
-            GetUserRes dbUser = findByEmail(loginReq.getEmailId());
-            if (dbUser == null) throw new BaseException(WRONG_EMAIL);
-            if (!dbUser.getPassword().equals(loginReq.getPassword())) throw new BaseException(WRONG_PASSWORD);
+    public void login(LoginReq loginReq, HttpSession session) throws BaseException { // findByEmail에서 예외 맞춰서 throw하므로, 그대로 던지면 됨
+        GetUserRes dbUser = findByEmail(loginReq.getEmailId());
+        if (dbUser == null) throw new BaseException(WRONG_EMAIL);
+        if (!dbUser.getPassword().equals(loginReq.getPassword())) throw new BaseException(WRONG_PASSWORD);
 
-            session.setAttribute("loginUser", dbUser);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BaseException(DB_ERROR);
-        }
+        session.setAttribute("loginUser", dbUser);
     }
 
     /**
@@ -88,7 +84,10 @@ public class UserServiceImpl implements UserService
     }
 
     public void modifyUser(ModifyUserReq modifyUserReq) throws BaseException {
-        checkUniqueEmail(modifyUserReq.getEmailId());
+        GetUserRes findUser = findById(modifyUserReq.getUserId());
+
+        checkUniqueEmail(modifyUserReq.getUserId(), modifyUserReq.getEmailId());
+        checkUniqueNickname(modifyUserReq.getUserId(), modifyUserReq.getNickname());
         try {
             userDao.modifyUser(modifyUserReq);
         } catch (Exception e) {
@@ -130,15 +129,12 @@ public class UserServiceImpl implements UserService
     }
 
     public GetUserRes findByEmail(String email) throws BaseException {
-        GetUserRes findUser;
         try {
-            findUser = userDao.findByEmail(email);
+            return userDao.findByEmail(email);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException(DB_ERROR);
         }
-
-        return findUser;
     }
 
     public List<GetUserRes> findAll() throws BaseException {
@@ -150,13 +146,34 @@ public class UserServiceImpl implements UserService
         }
     }
 
+    private GetUserRes findByNickname(String nickname) throws BaseException {
+        try {
+            return userDao.findByNickname(nickname);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
+    }
+
+    /**
+     * Nickname 중복 체크
+     * @param nickname
+     * @throws BaseException
+     */
+    private void checkUniqueNickname(int userId, String nickname) throws BaseException {
+        GetUserRes sameNicknameUser = findByNickname(nickname);
+        if (sameNicknameUser != null && sameNicknameUser.getUserId() != userId)
+            throw new BaseException(DUPLICATED_NICKNAME);
+    }
+
     /**
      * Email 중복 체크
      * @param email
      * @throws BaseException
      */
-    private void checkUniqueEmail(String email) throws BaseException {
-        if (findByEmail(email) != null)
+    private void checkUniqueEmail(int userId, String email) throws BaseException {
+        GetUserRes sameEmailUser = findByEmail(email);
+        if (sameEmailUser != null && sameEmailUser.getUserId() != userId)
             throw new BaseException(DUPLICATED_EMAIL);
     }
 
