@@ -1,15 +1,13 @@
-package com.ssafy.enjoyTrip.article.entity.dto;
+package com.ssafy.enjoyTrip.article.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @Builder
 public class FileInfo {
+    private int fileID;
+    private int articleId;
     private String saveFolder;
     private String originalFile;
     private String saveFile;

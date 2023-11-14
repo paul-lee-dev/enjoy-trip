@@ -1,8 +1,8 @@
 package com.ssafy.enjoyTrip.comment;
 
-import com.ssafy.enjoyTrip.comment.entity.dto.CreateCommentReq;
-import com.ssafy.enjoyTrip.comment.entity.dto.GetCommentRes;
-import com.ssafy.enjoyTrip.comment.entity.dto.ModifyCommentReq;
+import com.ssafy.enjoyTrip.article.entity.dto.CreateCommentReq;
+import com.ssafy.enjoyTrip.article.entity.dto.GetCommentRes;
+import com.ssafy.enjoyTrip.article.entity.dto.ModifyCommentReq;
 import com.ssafy.enjoyTrip.comment.service.CommentService;
 import com.ssafy.enjoyTrip.comment.service.CommentServiceImpl;
 import com.ssafy.enjoyTrip.common.BaseException;

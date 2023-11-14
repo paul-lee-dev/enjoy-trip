@@ -1,9 +1,7 @@
 package com.ssafy.enjoyTrip.article.service;
 
 import com.ssafy.enjoyTrip.article.dao.ArticleDao;
-import com.ssafy.enjoyTrip.article.entity.dto.CreateArticleReq;
-import com.ssafy.enjoyTrip.article.entity.dto.GetArticleRes;
-import com.ssafy.enjoyTrip.article.entity.dto.ModifyArticleReq;
+import com.ssafy.enjoyTrip.article.entity.dto.*;
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.common.PageNavigation;
 import com.ssafy.enjoyTrip.common.constant.SizeConstant;
@@ -39,7 +37,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<GetArticleRes> listArticle(Map<String, String> map) throws Exception {
+    public List<GetArticleRes> listArticle(Map<String, String> map) throws BaseException {
         Map<String, Object> param = new HashMap<String, Object>();
         String key = map.get("key");
         if("userId".equals(key))
@@ -55,7 +53,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public PageNavigation makePageNavigation(Map<String, String> map) throws Exception {
+    public PageNavigation makePageNavigation(Map<String, String> map) throws BaseException {
         PageNavigation pageNavigation = new PageNavigation();
 
         int naviSize = SizeConstant.NAVIGATION_SIZE;
@@ -107,5 +105,61 @@ public class ArticleServiceImpl implements ArticleService {
 //            File file = new File(path + File.separator + fileInfo.getSaveFolder() + File.separator + fileInfo.getSaveFile());
 //            file.delete();
 //        }
+    }
+
+    public void createComment(CreateCommentReq createCommentReq) throws BaseException {
+
+    }
+
+    public List<GetCommentRes> listComment(int articleNo) throws BaseException {
+        return null;
+    }
+
+    public void modifyComment(ModifyCommentReq modifyCommentReq) throws BaseException {
+
+    }
+
+    public void deleteComment(int commentId) throws BaseException {
+
+    }
+
+    public void addHeart(HeartDto heartDto) throws BaseException {
+
+    }
+
+    public void updateheart(HeartDto heartDto) throws BaseException {
+
+    }
+
+    public int heartState(HeartDto heartDto) throws BaseException {
+        return 0;
+    }
+
+    public int exitHeart(HeartDto heartDto) throws BaseException {
+        return 0;
+    }
+
+    public int cntHeart(int articleId) throws BaseException {
+        return 0;
+    }
+
+    public void uploadFile(UploadFileReq uploadFileReq) throws BaseException {
+
+    }
+
+    public List<GetFileRes> listFiles(int articleId) throws BaseException {
+        return null;
+    }
+
+    public GetFileRes getFile(int fileId) throws BaseException {
+        return null;
+    }
+
+    public void deleteFile(int fileId) throws BaseException {
+
+    }
+
+    public void deleteAll(int articleId) throws BaseException {
+
     }
 }

@@ -7,13 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class Article {
+public class Heart {
     private int articleId;
     private int userId;
-    private String subject;
-    private String content;
-    private int hit;
-    private String createdAt;
-    private String updatedAt;
-    private int heart;
+    private int state;
 }

@@ -1,8 +1,6 @@
 package com.ssafy.enjoyTrip.article.dao;
 
-import com.ssafy.enjoyTrip.article.entity.dto.CreateArticleReq;
-import com.ssafy.enjoyTrip.article.entity.dto.GetArticleRes;
-import com.ssafy.enjoyTrip.article.entity.dto.ModifyArticleReq;
+import com.ssafy.enjoyTrip.article.entity.dto.*;
 
 import java.util.List;
 import java.util.Map;
@@ -19,5 +17,10 @@ public interface ArticleDao {
     List<GetArticleRes> listArticle(Map<String, Object> param);
     //    List<FileInfo> fileInfoList(int articleId);
     GetArticleRes getArticle(int articleId);
+
+    void createComment(CreateCommentReq createCommentReq);
+    void modifyComment(ModifyCommentReq modifyCommentReq);
+    void deleteComment(int commentId);
+    List<GetCommentRes> listComment(int articleId);
 
 }

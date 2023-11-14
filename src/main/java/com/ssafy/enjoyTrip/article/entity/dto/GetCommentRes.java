@@ -1,6 +1,8 @@
-package com.ssafy.enjoyTrip.comment.entity.dto;
+package com.ssafy.enjoyTrip.article.entity.dto;
 
 import lombok.*;
+
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -11,6 +13,9 @@ public class GetCommentRes {
     private int commentId;
     private int userId;
     private String parentCommentId;
+
+    @NotBlank(message="내용을 입력해주세요.")
     private String content;
+
     private String updatedAt;
 }

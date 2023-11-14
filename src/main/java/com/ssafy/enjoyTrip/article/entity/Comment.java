@@ -1,4 +1,4 @@
-package com.ssafy.enjoyTrip.comment.entity;
+package com.ssafy.enjoyTrip.article.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

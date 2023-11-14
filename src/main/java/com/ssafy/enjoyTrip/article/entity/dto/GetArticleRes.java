@@ -15,5 +15,6 @@ public class GetArticleRes {
     private int hit;
     private String createdAt;
     private String updatedAt;
+    private int heart;
 //    private List<FileInfo> fileInfos;
 }

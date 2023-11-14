@@ -1,18 +1,14 @@
 package com.ssafy.enjoyTrip.comment.service;
 
 import com.ssafy.enjoyTrip.comment.dao.CommentDao;
-import com.ssafy.enjoyTrip.comment.entity.dto.CreateCommentReq;
-import com.ssafy.enjoyTrip.comment.entity.dto.GetCommentRes;
-import com.ssafy.enjoyTrip.comment.entity.dto.ModifyCommentReq;
+import com.ssafy.enjoyTrip.article.entity.dto.CreateCommentReq;
+import com.ssafy.enjoyTrip.article.entity.dto.GetCommentRes;
+import com.ssafy.enjoyTrip.article.entity.dto.ModifyCommentReq;
 import com.ssafy.enjoyTrip.common.BaseException;
-import com.ssafy.enjoyTrip.common.PageNavigation;
-import com.ssafy.enjoyTrip.common.constant.SizeConstant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.ssafy.enjoyTrip.common.BaseResponseStatus.DB_ERROR;
 
