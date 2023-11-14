@@ -20,7 +20,7 @@ public interface ArticleService {
 
     /** 댓글 **/
     void createComment(CreateCommentReq createCommentReq) throws BaseException;
-    List<GetCommentRes> listComment(int articleNo) throws BaseException;
+    List<GetCommentRes> listComment(int articleId) throws BaseException;
     void modifyComment(ModifyCommentReq modifyCommentReq) throws BaseException;
     void deleteComment(int commentId) throws BaseException;
 

@@ -8,6 +8,7 @@ import com.ssafy.enjoyTrip.common.constant.SizeConstant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,6 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Transactional
     public void createArticle(CreateArticleReq createArticleReq) throws BaseException {
-//        List<FileInfo> fileInfos = createArticleReq.getFileInfos();
         try {
             articleDao.createArticle(createArticleReq);
         } catch (Exception e){
@@ -81,85 +81,173 @@ public class ArticleServiceImpl implements ArticleService {
         return pageNavigation;
     }
 
-    @Override
-    public GetArticleRes getArticle(int articleId) throws Exception {
-        return articleDao.getArticle(articleId);
+    public GetArticleRes getArticle(int articleId) throws BaseException {
+        try {
+            GetArticleRes getArticleRes = articleDao.getArticle(articleId);
+            System.out.println(getArticleRes);
+            return getArticleRes;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     @Override
-    public void updateHit(int articleId) throws Exception {
-        articleDao.updateHit(articleId);
+    public void updateHit(int articleId) throws BaseException {
+        try {
+            articleDao.updateHit(articleId);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     @Override
     public void modifyArticle(ModifyArticleReq modifyArticleReq) throws BaseException {
-        articleDao.modifyArticle(modifyArticleReq);
+        try{
+            articleDao.modifyArticle(modifyArticleReq);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     @Override
     public void deleteArticle(int articleId) throws BaseException {
-//        List<FileInfo> fileList = articleDao.fileInfoList(articleId);
-        articleDao.deleteArticle(articleId);
-//        articleDao.deleteFile(articleId);
-//        for(FileInfo fileInfo : fileList) {
-//            File file = new File(path + File.separator + fileInfo.getSaveFolder() + File.separator + fileInfo.getSaveFile());
-//            file.delete();
-//        }
+        try{
+            articleDao.deleteArticle(articleId);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public void createComment(CreateCommentReq createCommentReq) throws BaseException {
-
+        try{
+            articleDao.createComment(createCommentReq);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
-    public List<GetCommentRes> listComment(int articleNo) throws BaseException {
-        return null;
+    public List<GetCommentRes> listComment(int articleId) throws BaseException {
+        try {
+            List<GetCommentRes> listComment = articleDao.listComment(articleId);
+            return listComment;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public void modifyComment(ModifyCommentReq modifyCommentReq) throws BaseException {
-
+        try{
+            articleDao.modifyComment(modifyCommentReq);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public void deleteComment(int commentId) throws BaseException {
-
+        try{
+            articleDao.deleteComment(commentId);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public void addHeart(HeartDto heartDto) throws BaseException {
-
+        try{
+            articleDao.addHeart(heartDto);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public void updateheart(HeartDto heartDto) throws BaseException {
-
+        try{
+            articleDao.updateheart(heartDto);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public int heartState(HeartDto heartDto) throws BaseException {
-        return 0;
+        try{
+            return articleDao.heartState(heartDto);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public int exitHeart(HeartDto heartDto) throws BaseException {
-        return 0;
+        try{
+            return articleDao.exitHeart(heartDto);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public int cntHeart(int articleId) throws BaseException {
-        return 0;
+        try{
+            return articleDao.cntHeart(articleId);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public void uploadFile(UploadFileReq uploadFileReq) throws BaseException {
-
+        try{
+            articleDao.uploadFile(uploadFileReq);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public List<GetFileRes> listFiles(int articleId) throws BaseException {
-        return null;
+        try{
+            List<GetFileRes> files = articleDao.listFiles(articleId);
+            return files;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public GetFileRes getFile(int fileId) throws BaseException {
-        return null;
+        try{
+            GetFileRes file = articleDao.getFile(fileId);
+            return file;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public void deleteFile(int fileId) throws BaseException {
-
+        try{
+            articleDao.deleteFile(fileId);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 
     public void deleteAll(int articleId) throws BaseException {
-
+        try{
+            articleDao.deleteAll(articleId);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
     }
 }

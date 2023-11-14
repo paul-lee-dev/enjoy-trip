@@ -1,8 +1,6 @@
 package com.ssafy.enjoyTrip.article;
 
-import com.ssafy.enjoyTrip.article.entity.dto.CreateArticleReq;
-import com.ssafy.enjoyTrip.article.entity.dto.GetArticleRes;
-import com.ssafy.enjoyTrip.article.entity.dto.ModifyArticleReq;
+import com.ssafy.enjoyTrip.article.entity.dto.*;
 import com.ssafy.enjoyTrip.article.service.ArticleService;
 import com.ssafy.enjoyTrip.article.service.ArticleServiceImpl;
 import com.ssafy.enjoyTrip.common.BaseException;
@@ -10,13 +8,20 @@ import com.ssafy.enjoyTrip.common.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Api(value = "Article API")
 @CrossOrigin(origins = {"*"})//다른 서버에서 AJax 요청이 와도 서비스 되도록 설정
@@ -24,9 +29,16 @@ import java.util.Map;
 @RequestMapping("/articles")
 public class ArticleController {
     private final ArticleService articleService;
-
     public ArticleController(ArticleServiceImpl service) { this.articleService = service; }
 
+    private static final String SUCCESS = "success";
+    private static final String FAIL = "fail";
+
+    private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
+
+    @Autowired
+    private ServletContext servletContext;
+    /** 게시판 **/
     @ApiOperation(value = "글쓰기")
     @PostMapping
     @Transactional
@@ -58,10 +70,14 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public ResponseEntity<?> getArticle(@PathVariable int articleId) throws Exception {
         GetArticleRes getArticleRes = articleService.getArticle(articleId);
+        List<GetCommentRes> comments = articleService.listComment(articleId);
         articleService.updateHit(articleId);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("article", getArticleRes);
+        map.put("comments", comments);
         return ResponseEntity
                 .ok()
-                .body(new BaseResponse<>(getArticleRes));
+                .body(new BaseResponse<>(map));
     }
 
     @ApiOperation(value = "글 수정")
@@ -73,7 +89,6 @@ public class ArticleController {
                 .build();
     }
 
-
     @ApiOperation(value = "글 삭제")
     @DeleteMapping("/{articleId}")
     @Transactional
@@ -82,5 +97,107 @@ public class ArticleController {
         return ResponseEntity
                 .ok()
                 .build();
+    }
+
+    /** 댓글 **/
+    @ApiOperation(value = "댓글 작성")
+    @PostMapping("/comments")
+    @Transactional
+    public ResponseEntity<?> createComment(@RequestBody @Valid CreateCommentReq createCommentReq) throws BaseException {
+        articleService.createComment(createCommentReq);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @ApiOperation(value = "댓글 수정")
+    @PatchMapping("/comments/{commentId}")
+    public ResponseEntity<?> modifyComment(@RequestBody ModifyCommentReq modifyCommentReq) throws BaseException {
+        articleService.modifyComment(modifyCommentReq);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @ApiOperation(value = "댓글 삭제")
+    @DeleteMapping("/comments/{commentId}")
+    @Transactional
+    public ResponseEntity<?> deleteComment(@PathVariable int commentId) throws BaseException {
+        articleService.deleteComment(commentId);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    /** 좋아요 **/
+
+    @ApiOperation(value = "좋아요 업데이트")
+    @PostMapping("/hearts")
+    @Transactional
+    public ResponseEntity<?> updateHeart(@RequestBody HeartDto heartDto) throws BaseException {
+        if(articleService.exitHeart(heartDto) > 0){
+            articleService.exitHeart(heartDto);
+        }else {
+            articleService.addHeart(heartDto);
+        }
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @ApiOperation(value = "좋아요 개수")
+    @PostMapping("/hearts/get")
+    public ResponseEntity<?> getHeart(@RequestBody HeartDto heartDto) throws BaseException {
+        articleService.heartState(heartDto);
+        articleService.cntHeart(heartDto.getArticleId());
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    /** 파일 **/
+    @ApiOperation(value="파일 업로드")
+    @PostMapping("/files")
+    public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("upfile") MultipartFile[] files, int articleId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        HttpStatus status = null;
+        try {
+            logger.debug("MultipartFile.isEmpty : {}", files[0].isEmpty());
+            if (!files[0].isEmpty()) {
+                String realPath = servletContext.getRealPath("/upload");
+                String today = new SimpleDateFormat("yyMMdd").format(new Date());
+                String saveFolder = realPath + File.separator + today;
+                logger.debug("저장 폴더 : {}", saveFolder);
+                File folder = new File(saveFolder);
+                if (!folder.exists())
+                    folder.mkdirs();
+                List<UploadFileReq> fileInfos = new ArrayList<UploadFileReq>();
+                for (MultipartFile mfile : files) {
+                    UploadFileReq uploadFileReq = new UploadFileReq();
+                    uploadFileReq.setArticleId(articleId);
+                    String originalFileName = mfile.getOriginalFilename();
+                    if (!originalFileName.isEmpty()) {
+                        String saveFileName = UUID.randomUUID().toString()
+                                + originalFileName.substring(originalFileName.lastIndexOf('.'));
+                        uploadFileReq.setSaveFolder(today);
+                        uploadFileReq.setOriginalFile(originalFileName);
+                        uploadFileReq.setSaveFile(saveFileName);
+                        logger.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", mfile.getOriginalFilename(), saveFileName);
+                        mfile.transferTo(new File(folder, saveFileName));
+                    }
+                    fileInfos.add(uploadFileReq);
+                    articleService.uploadFile(uploadFileReq);
+                }
+                map.put("imageUrl", fileInfos);
+            }
+
+            map.put("message", SUCCESS);
+            status = HttpStatus.ACCEPTED;
+        } catch (Exception e) {
+            map.put("message", FAIL);
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            e.printStackTrace();
+        }
+        return new ResponseEntity<Map<String, Object>>(map, status);
     }
 }

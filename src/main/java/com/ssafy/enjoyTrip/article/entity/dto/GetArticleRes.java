@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class GetArticleRes {
     private int articleId;
     private int userId;
@@ -16,5 +17,4 @@ public class GetArticleRes {
     private String createdAt;
     private String updatedAt;
     private int heart;
-//    private List<FileInfo> fileInfos;
 }
