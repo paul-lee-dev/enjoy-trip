@@ -1,5 +1,6 @@
 package com.ssafy.enjoyTrip.user.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.user.dao.UserDao;
 import com.ssafy.enjoyTrip.user.entity.dto.*;
@@ -26,12 +27,20 @@ import static com.ssafy.enjoyTrip.common.BaseResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public class UserServiceImpl implements UserService
+        , OAuth2UserService<OAuth2UserRequest, OAuth2User>
+{
 
     private final UserDao userDao;
     private final HttpSession httpSession;
 
-    private final String googleUserInfoUrl = "https://www.googleapis.com/userinfo/v2/me";
+    private final Map<String, String> userInfoUrls = new HashMap<String, String>() {
+        {
+            put("google", "https://www.googleapis.com/userinfo/v2/me");
+            put("kakao", "https://kapi.kakao.com/v2/user/me");
+            put("naver", "https://openapi.naver.com/v1/nid/me");
+        }
+    };
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -39,9 +48,13 @@ public class UserServiceImpl implements UserService, OAuth2UserService<OAuth2Use
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        System.out.println("registrationId = " + registrationId);
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
         String accessTokenValue = userRequest.getAccessToken().getTokenValue();
+        System.out.println("accessTokenValue = " + accessTokenValue);
+
+        System.out.println("oAuth2User.getAttributes() = " + oAuth2User.getAttributes());
 
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
@@ -67,36 +80,55 @@ public class UserServiceImpl implements UserService, OAuth2UserService<OAuth2Use
 
     private GetUserRes saveOrUpdate(OAuthAttributes attributes, String accessTokenValue) throws Exception {
         GetUserRes getUserRes = findByEmail(attributes.getEmail());
-        Map<String, String> newInfo = getNewestUserInfo(accessTokenValue);
-        String name = newInfo.get("name");
-        String email = newInfo.get("email");
-        String profileImgUrl = newInfo.get("picture");
+        String registrationId = attributes.getRegistrationId();
+        Map<String, String> newInfo = getNewestUserInfo(registrationId, accessTokenValue);
+        System.out.println("newInfo = " + newInfo);
+        System.out.println("attributes = " + attributes);
+        System.out.println("attributes.getName() = " + attributes.getName());
+        System.out.println("attributes.getEmail() = " + attributes.getEmail());
+        System.out.println("attributes.getProfileImgUrl() = " + attributes.getProfileImgUrl());
         if (getUserRes != null) {
             System.out.println("user 이미 있음");
+            System.out.println("modifyUser = " + ModifyUserReq.builder()
+                    .userId(getUserRes.getUserId())
+                    .name(attributes.getName())
+                    .email(attributes.getEmail())
+                    .profileImgUrl(attributes.getProfileImgUrl())
+                    .phoneNumber(getUserRes.getPhoneNumber())
+                    .nickname(getUserRes.getNickname())
+                    .build());
             // 수정 필요
             modifyUser(ModifyUserReq.builder()
                     .userId(getUserRes.getUserId())
-                    .name(name)
-                    .email(email)
-                    .profileImgUrl(profileImgUrl)
+                    .name(attributes.getName())
+                    .email(attributes.getEmail())
+                    .profileImgUrl(attributes.getProfileImgUrl())
                     .phoneNumber(getUserRes.getPhoneNumber())
                     .nickname(getUserRes.getNickname())
                     .build());
             System.out.println("modify userInfo");
         } else {
             System.out.println("새 유저 생성");
+            System.out.println("snsUserInfo = " + SnsInfoDto.builder()
+                    .email(attributes.getEmail())
+                    .name(attributes.getName())
+                    .profileImgUrl(attributes.getProfileImgUrl())
+                    .snsType(attributes.getRegistrationId())
+                    .build());
             userDao.createSnsUser(SnsInfoDto.builder()
-                    .email(email)
-                    .name(name)
-                    .profileImgUrl(profileImgUrl)
-                    .snsType("google")
+                    .email(attributes.getEmail())
+                    .name(attributes.getName())
+                    .profileImgUrl(attributes.getProfileImgUrl())
+                    .snsType(attributes.getRegistrationId())
                     .build());
             System.out.println("새 유저 생성 완료");
         }
-        return findByEmail(attributes.getEmail());
+        return attributes.getRegistrationId().equals("google")
+                ? findByEmail(attributes.getEmail())
+                : findByName(attributes.getName());
     }
 
-    private Map<String, String> getNewestUserInfo(String accessTokenValue) {
+    private Map<String, String> getNewestUserInfo(String registrationId, String accessTokenValue) {
         HttpHeaders headers = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
 
@@ -106,9 +138,22 @@ public class UserServiceImpl implements UserService, OAuth2UserService<OAuth2Use
 
         HttpEntity<?> userInfoEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<HashMap> userInfoRes = restTemplate.exchange(googleUserInfoUrl, HttpMethod.GET,
+        ResponseEntity<HashMap> userInfoRes = restTemplate.exchange(userInfoUrls.get(registrationId), HttpMethod.GET,
                 userInfoEntity, HashMap.class);
-        return userInfoRes.getBody();
+        Map<String, String> result = userInfoRes.getBody();
+
+//        System.out.println("result = " + result);
+//        System.out.println("result.get() = " + result.get("properties"));
+//        if (registrationId.equals("kakao")) {
+//            ObjectMapper mapper = new ObjectMapper();
+//            try {
+//                result = mapper.readValue(result.get("properties"), Map.class);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                System.out.println("카카오 로그인 응답 파싱 실패");
+//            }
+//        }
+        return result;
     }
 
 
@@ -222,9 +267,9 @@ public class UserServiceImpl implements UserService, OAuth2UserService<OAuth2Use
         }
     }
 
-    private GetUserRes findByNickname(String nickname) throws BaseException {
+    private GetUserRes findByName(String name) throws BaseException {
         try {
-            return userDao.findByNickname(nickname);
+            return userDao.findByName(name);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException(DB_ERROR);
@@ -237,7 +282,7 @@ public class UserServiceImpl implements UserService, OAuth2UserService<OAuth2Use
      * @throws BaseException
      */
     private void checkUniqueNickname(int userId, String nickname) throws BaseException {
-        GetUserRes sameNicknameUser = findByNickname(nickname);
+        GetUserRes sameNicknameUser = findByName(nickname);
         if (sameNicknameUser != null && sameNicknameUser.getUserId() != userId)
             throw new BaseException(DUPLICATED_NICKNAME);
     }

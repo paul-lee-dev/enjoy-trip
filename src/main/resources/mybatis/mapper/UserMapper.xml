@@ -12,14 +12,28 @@
     </insert>
 
     <insert id="createSnsUser" parameterType="snsInfoDto">
-        insert into user(email, profile_img)
-        values (#{email}, #{profileImgUrl});
+        <choose>
+            <when test="email != null">
+                insert into user(email, profile_img)
+                values (#{email}, #{profileImgUrl});
 
-        insert into sns_info(user_id, email, sns_type)
-        values((select user_id
+                insert into sns_info(user_id, email, sns_type)
+                values((select user_id
+                        from user
+                        where email = #{email})
+                      , #{email}, #{snsType});
+            </when>
+            <otherwise>
+                insert into user(name, profile_img)
+                values (#{name}, #{profileImgUrl});
+
+                insert into sns_info(user_id, sns_type)
+                values((select user_id
                 from user
-                where email = #{email})
-              , #{email}, #{snsType});
+                where name = #{name})
+                , #{snsType});
+            </otherwise>
+        </choose>
     </insert>
 
     <!-- 정보조회 -->
@@ -33,10 +47,10 @@
                created_at, phone_number, status
         from user where email = #{email} and status != 'deleted'
     </select>
-    <select id="findByNickname" parameterType="String" resultType="getUserRes">
+    <select id="findByName" parameterType="String" resultType="getUserRes">
         select user_id, email, password, name, nickname, profile_img as profile_img_url,
                created_at, phone_number, status
-        from user where nickname = #{nickname} and status != 'deleted'
+        from user where name = #{name} and status != 'deleted'
     </select>
     <select id = "findAll" resultType="getUserRes">
         select user_id, email, password, name, nickname, profile_img as profile_img_url,
