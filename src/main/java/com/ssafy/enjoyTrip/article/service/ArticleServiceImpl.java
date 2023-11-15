@@ -8,7 +8,6 @@ import com.ssafy.enjoyTrip.common.constant.SizeConstant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,6 @@ public class ArticleServiceImpl implements ArticleService {
         int start = pgNo * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
         param.put("start", start);
         param.put("listsize", SizeConstant.LIST_SIZE);
-
         return articleDao.listArticle(param);
     }
 
@@ -170,7 +168,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     public void updateheart(HeartDto heartDto) throws BaseException {
         try{
-            articleDao.updateheart(heartDto);
+            articleDao.updateHeart(heartDto);
         }catch (Exception e){
             e.printStackTrace();
             throw new BaseException(DB_ERROR);
@@ -245,6 +243,16 @@ public class ArticleServiceImpl implements ArticleService {
     public void deleteAll(int articleId) throws BaseException {
         try{
             articleDao.deleteAll(articleId);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
+    }
+
+    public int getAuto() throws BaseException {
+        // TODO Auto-generated method stub
+        try{
+            return articleDao.getAuto();
         }catch (Exception e){
             e.printStackTrace();
             throw new BaseException(DB_ERROR);

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -14,7 +13,6 @@ public class CreateCommentReq {
     @NotNull(message="article_id is null")
     private int articleId;
     private int parentCommentId;
-//    @NotBlank(message="내용을 입력해주세요.")
     private String content;
     private int userId;
 }

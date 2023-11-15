@@ -32,10 +32,10 @@ public interface ArticleService {
     int cntHeart(int articleId) throws BaseException;
 
     /** 파일업로드 **/
-
     void uploadFile(UploadFileReq uploadFileReq) throws BaseException;
     List<GetFileRes> listFiles(int articleId) throws BaseException;
     GetFileRes getFile(int fileId) throws BaseException;
     void deleteFile(int fileId) throws BaseException;
     void deleteAll(int articleId) throws BaseException;
+    int getAuto() throws BaseException;
 }

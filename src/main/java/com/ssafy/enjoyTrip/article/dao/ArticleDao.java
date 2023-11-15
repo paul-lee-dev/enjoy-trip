@@ -1,7 +1,6 @@
 package com.ssafy.enjoyTrip.article.dao;
 
 import com.ssafy.enjoyTrip.article.entity.dto.*;
-import com.ssafy.enjoyTrip.common.BaseException;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,7 @@ public interface ArticleDao {
 
     /** 좋아요 **/
     void addHeart(HeartDto heartDto);
-    void updateheart(HeartDto heartDto);
+    void updateHeart(HeartDto heartDto);
     int heartState(HeartDto heartDto);
     int exitHeart(HeartDto heartDto);
     int cntHeart(int articleId);
@@ -35,5 +34,5 @@ public interface ArticleDao {
     GetFileRes getFile(int fileId);
     void deleteFile(int fileId);
     void deleteAll(int articleId);
-
+    int getAuto();
 }

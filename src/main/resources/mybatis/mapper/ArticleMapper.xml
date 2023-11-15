@@ -15,6 +15,9 @@
         true
     </sql>
 
+    <!-- ================= 게시판 ================= -->
+
+
     <!-- 게시판 생성 -->
     <insert id="createArticle" parameterType="CreateArticleReq">
         insert into article (user_id, subject, content)
@@ -58,22 +61,24 @@
     </delete>
 
 
+    <!-- ================= 댓글 ================= -->
+
     <!-- 댓글 생성 -->
     <insert id="createComment" parameterType="CreateCommentReq">
         <choose>
             <when test="parentCommentId != null">
-                insert into comment (user_id, parent_comment_id,article_id, content)
-                values (#{userId},  #{parentCommentId},#{articleId}, #{content})
+                insert into comment (user_id, parent_comment_id, article_id, content)
+                values (#{userId},  #{parentCommentId}, #{articleId}, #{content})
             </when>
             <otherwise>
                 insert into comment (user_id, article_id, content)
-                values (#{userId},#{articleId}, #{content})
+                values (#{userId}, #{articleId}, #{content})
             </otherwise>
         </choose>
     </insert>
 
     <select id="listComment" parameterType="map" resultType="GetCommentRes">
-        select comment_id, user_id, content, created_at
+        select comment_id, user_id, content, updated_at
         from comment
         where article_id = #{articleId}
     </select>
@@ -90,4 +95,51 @@
         where comment_id = #{commentId}
     </delete>
 
+
+    <!-- ================= 좋아요 ================= -->
+    <select id="heartState" parameterType="heartDto" resultType="int">
+        select state from hearts where user_id=#{userId} and article_id=#{articleNo}
+    </select>
+
+    <select id="exitHeart" parameterType="heartDto" resultType="int">
+        select count(*) from hearts where article_id=#{articleId} and user_id=#{userId}
+    </select>
+
+    <select id="cntHeart" parameterType="int" resultType="int">
+        select count(*) from hearts where article_id=#{articleId} and state=1
+    </select>
+
+    <insert id="addHeart" parameterType="heartDto">
+        insert into hearts(article_id,user_id, state) values(#{articleId},#{userId},#{state})
+    </insert>
+
+    <update id="updateHeart" parameterType="heartDto">
+        update hearts set state = #{state} where article_id=#{articleId} and user_id=#{userId}
+    </update>
+
+    <!-- ================= 파일 ================= -->
+    <select id="getAuto" resultType="int">
+        select last_insert_id()
+    </select>
+
+    <select id="listFiles" resultType="int" resultMap="getFileRes">
+        select * from files where article_id=#{articleId}
+    </select>
+
+    <select id="getFile" resultType="int" resultMap="getFileRes">
+        select * from files where file_id=#{fileId}
+    </select>
+
+    <insert id="uploadFile" parameterType="UploadFileReq">
+        insert into files(article_id,save_folder, original_file,save_file)
+        values(#{articleId},#{saveFolder},#{originalFile},#{saveFile})
+    </insert>
+
+    <delete id="deleteFile" parameterType="int">
+        delete from files where file_id=#{fileId}
+    </delete>
+
+    <delete id="deleteAll" parameterType="int">
+        delete from files where article_id=#{articleId}
+    </delete>
 </mapper>

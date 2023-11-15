@@ -8,6 +8,9 @@ import com.ssafy.enjoyTrip.common.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +80,7 @@ public class ArticleController {
         GetArticleRes getArticleRes = articleService.getArticle(articleId);
         List<GetCommentRes> comments = articleService.listComment(articleId);
         articleService.updateHit(articleId);
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("article", getArticleRes);
         map.put("comments", comments);
         return ResponseEntity
@@ -164,8 +167,8 @@ public class ArticleController {
     @ApiOperation(value="파일 업로드")
     @PostMapping("/files")
     public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("upfile") MultipartFile[] files, int articleId) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        HttpStatus status = null;
+        Map<String, Object> map = new HashMap<>();
+        HttpStatus status;
         try {
             logger.debug("MultipartFile.isEmpty : {}", files[0].isEmpty());
             if (!files[0].isEmpty()) {
@@ -176,13 +179,13 @@ public class ArticleController {
                 File folder = new File(saveFolder);
                 if (!folder.exists())
                     folder.mkdirs();
-                List<UploadFileReq> fileInfos = new ArrayList<UploadFileReq>();
+                List<UploadFileReq> fileInfos = new ArrayList<>();
                 for (MultipartFile mfile : files) {
                     UploadFileReq uploadFileReq = new UploadFileReq();
                     uploadFileReq.setArticleId(articleId);
                     String originalFileName = mfile.getOriginalFilename();
-                    if (!originalFileName.isEmpty()) {
-                        String saveFileName = UUID.randomUUID().toString()
+                    if (!Objects.requireNonNull(originalFileName).isEmpty()) {
+                        String saveFileName = UUID.randomUUID()
                                 + originalFileName.substring(originalFileName.lastIndexOf('.'));
                         uploadFileReq.setSaveFolder(today);
                         uploadFileReq.setOriginalFile(originalFileName);
@@ -246,7 +249,7 @@ public class ArticleController {
             response.getOutputStream().close();
 
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -271,23 +274,10 @@ public class ArticleController {
                 .build();
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
     static class SendFile {
         int i, idx;
-        public SendFile(int i, int idx) {
-            this.i = i;
-            this.idx = idx;
-        }
-        public int getI() {
-            return i;
-        }
-        public void setI(int i) {
-            this.i = i;
-        }
-        public int getIdx() {
-            return idx;
-        }
-        public void setIdx(int idx) {
-            this.idx = idx;
-        }
     }
 }
