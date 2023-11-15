@@ -1,24 +1,38 @@
 package com.ssafy.enjoyTrip.user.entity.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.ssafy.enjoyTrip.user.entity.User;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class GetUserRes {
     private int userId;
-    private String emailId;
+    private String email;
     private String password;
-    private String firstName;
-    private String lastName;
+    private String name;
     private String nickname;
     private LocalDateTime createdAt;
     private String phoneNumber;
     private String status;
-//    private Role role;
+    private String role;
+    private String profileImgUrl;
+
+    public User toEntity() {
+        return User.builder()
+                .userId(userId)
+                .email(email)
+                .name(name)
+                .nickname(nickname)
+                .createdAt(createdAt)
+                .updatedAt(null)
+                .phoneNumber(phoneNumber)
+                .status(status)
+                .role(role)
+                .profileImgUrl(profileImgUrl)
+                .build();
+    }
 }

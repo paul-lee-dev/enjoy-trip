@@ -5,30 +5,41 @@
 
     <!-- 회원가입 -->
     <insert id="createUser" parameterType="createUserReq">
-        insert into user(email_id, password, first_name, last_name, nickname,
+        insert into user(email, password, name, nickname,
                          phone_number)
-        values (#{emailId}, #{password}, #{firstName}, #{lastName}, #{nickname}
+        values (#{email}, #{password}, #{name}, #{nickname}
                , #{phoneNumber})
+    </insert>
+
+    <insert id="createSnsUser" parameterType="snsInfoDto">
+        insert into user(email, profile_img)
+        values (#{email}, #{profileImgUrl});
+
+        insert into sns_info(user_id, email, sns_type)
+        values((select user_id
+                from user
+                where email = #{email})
+              , #{email}, #{snsType});
     </insert>
 
     <!-- 정보조회 -->
     <select id="findById" parameterType="int" resultType="getUserRes">
-        select user_id, email_id, password, first_name, last_name, nickname,
-               created_at, phone_number, status
+        select user_id, email, password, name, nickname, profile_img as profile_img_url,
+               created_at, phone_number, status, role
         from user where user_id = #{userId} and status != 'deleted'
     </select>
     <select id="findByEmail" parameterType="String" resultType="getUserRes">
-        select user_id, email_id, password, first_name, last_name, nickname,
+        select user_id, email, password, name, nickname, profile_img as profile_img_url,
                created_at, phone_number, status
-        from user where email_id = #{email} and status != 'deleted'
+        from user where email = #{email} and status != 'deleted'
     </select>
     <select id="findByNickname" parameterType="String" resultType="getUserRes">
-        select user_id, email_id, password, first_name, last_name, nickname,
+        select user_id, email, password, name, nickname, profile_img as profile_img_url,
                created_at, phone_number, status
         from user where nickname = #{nickname} and status != 'deleted'
     </select>
     <select id = "findAll" resultType="getUserRes">
-        select user_id, email_id, password, first_name, last_name, nickname,
+        select user_id, email, password, name, nickname, profile_img as profile_img_url,
                        created_at, phone_number, status
         from user
         where status != 'deleted'
@@ -36,8 +47,8 @@
 
     <!-- 수정 -->
     <update id="modifyUser" parameterType="modifyUserReq">
-        update user set email_id = #{emailId}, first_name = #{firstName},
-                        last_name = #{lastName}, nickname = #{nickname}, phone_number = #{phoneNumber}
+        update user set email = #{email}, name = #{name}, nickname = #{nickname}, phone_number = #{phoneNumber},
+                        profile_img = #{profileImgUrl}
         where user_id = #{userId}
     </update>
 

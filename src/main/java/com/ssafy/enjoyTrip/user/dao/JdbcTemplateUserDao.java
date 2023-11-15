@@ -26,7 +26,7 @@
 //        Object[] params = new Object[3];
 //        int paramIdx = 0;
 //
-//        params[paramIdx++] = createUserReq.getEmailId();
+//        params[paramIdx++] = createUserReq.getEmail();
 //        params[paramIdx++] = createUserReq.getPassword();
 //        params[paramIdx++] = createUserReq.getNickname();
 //
@@ -56,7 +56,7 @@
 //        Object[] params = new Object[5];
 //        int idx = 0;
 //
-//        params[idx++] = modifyUserReq.getEmailId();
+//        params[idx++] = modifyUserReq.getEmail();
 //        params[idx++] = modifyUserReq.getFirstName();
 //        params[idx++] = modifyUserReq.getLastName();
 //        params[idx++] = modifyUserReq.getNickname();
@@ -80,7 +80,7 @@
 //    private RowMapper<GetUserRes> getUserRowMapper() {
 //        return (rs, rowNum) -> GetUserRes.builder()
 //                .userId(rs.getInt("user_id"))
-//                .emailId(rs.getString("email_id"))
+//                .email(rs.getString("email_id"))
 //                .password(rs.getString("password"))
 //                .firstName(rs.getString("first_name"))
 //                .lastName(rs.getString("last_name"))

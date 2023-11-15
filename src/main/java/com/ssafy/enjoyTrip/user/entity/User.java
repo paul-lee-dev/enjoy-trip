@@ -9,14 +9,14 @@ import java.time.LocalDateTime;
 @Builder
 public class User {
     private int userId;
-    private String emailId;
+    private String email;
     private String password;
-    private String firstName;
-    private String lastName;
+    private String name;
     private String nickname;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String phoneNumber;
     private String status;
-//    private Role role;
+    private String role;
+    private String profileImgUrl;
 }

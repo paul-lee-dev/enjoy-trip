@@ -6,10 +6,10 @@
 //@Getter
 //@RequiredArgsConstructor
 //public enum Role {
-//
-//    ADMIN("ROLE_ADMIN", "관리자"),
-//    USER("ROLE_USER", "사용자");
+//    GUEST("GUEST"), // securityConfig에서 사용
+//    ADMIN("ADMIN"),
+//    USER("USER");
 //
 //    private final String key;
-//    private final String value;
+//
 //}

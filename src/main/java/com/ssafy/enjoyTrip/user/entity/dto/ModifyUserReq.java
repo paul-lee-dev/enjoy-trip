@@ -1,17 +1,16 @@
 package com.ssafy.enjoyTrip.user.entity.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-@ToString
+
+@Builder
 @Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ModifyUserReq {
 
     @NotNull(message = "userId is null")
@@ -19,15 +18,13 @@ public class ModifyUserReq {
 
     @NotBlank(message = "이메일을 입력해주세요.")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식이 올바르지 않습니다.")
-    private String emailId;
+    private String email;
 
     @NotBlank(message = "이름을 입력해주세요.")
     @Pattern(regexp = "^[A-Za-z가-힣]{1,20}$" , message = "이름에 특수문자, 숫자는 사용할 수 없습니다.")
-    private String firstName;
+    private String name;
 
-    @NotBlank(message = "성을 입력해주세요.")
-    @Pattern(regexp = "^[A-Za-z가-힣]{1,20}$" , message = "이름에 특수문자, 숫자는 사용할 수 없습니다.")
-    private String lastName;
+    private String profileImgUrl;
 
     @NotBlank(message = "닉네임을 입력해주세요.")
     @Pattern(regexp = "^[가-힣a-zA-Z0-9._-]{2,20}$" , message = "닉네임은 2~20자의 한글, 영어 대/소문자, 숫자, -, _로 구성되어야 합니다.")

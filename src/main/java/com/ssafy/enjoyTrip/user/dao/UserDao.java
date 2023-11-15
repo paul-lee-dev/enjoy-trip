@@ -1,14 +1,12 @@
 package com.ssafy.enjoyTrip.user.dao;
 
-import com.ssafy.enjoyTrip.user.entity.dto.CreateUserReq;
-import com.ssafy.enjoyTrip.user.entity.dto.GetUserRes;
-import com.ssafy.enjoyTrip.user.entity.dto.ModifyPwdReq;
-import com.ssafy.enjoyTrip.user.entity.dto.ModifyUserReq;
+import com.ssafy.enjoyTrip.user.entity.dto.*;
 
 import java.util.List;
 
 public interface UserDao {
     void createUser(CreateUserReq createUserReq);
+    void createSnsUser(SnsInfoDto snsInfoDto);
     GetUserRes findById(int userId);
     GetUserRes findByEmail(String email);
     GetUserRes findByNickname(String nickname);

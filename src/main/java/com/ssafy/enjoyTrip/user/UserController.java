@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * TODO : 소셜 로그인/로그아웃, 토큰 등 세션유지
+ * TODO : 네이버&카카오 로그인
  */
 @Api(value="User API")
 @CrossOrigin(origins = {"*"})
