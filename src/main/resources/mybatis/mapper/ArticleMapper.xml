@@ -3,51 +3,6 @@
 
 <mapper namespace="com.ssafy.enjoyTrip.article.dao.ArticleMapper">
 
-<!--    <resultMap type="GetArticleRes" id="article">-->
-<!--        <result column="article_id" property="articleId"/>-->
-<!--        <result column="user_id" property="userId"/>-->
-<!--        <result column="subject" property="subject"/>-->
-<!--        <result column="content" property="content"/>-->
-<!--        <result column="hit" property="hit"/>-->
-<!--        <result column="created_at" property="createdAt"/>-->
-<!--        <result column="updated_at" property="updatedAt"/>-->
-<!--    </resultMap>-->
-
-<!--    <resultMap type="GetArticleRes" id="viewArticle" extends="article">-->
-<!--        <collection property="fileInfos" column="article_id" javaType="list" ofType="fileInfo" select="fileInfoList"/>-->
-<!--    </resultMap>-->
-
-<!--    <resultMap type="fileInfo" id="file">-->
-<!--        <result column="save_folder" property="saveFolder"/>-->
-<!--        <result column="original_file" property="originalFile"/>-->
-<!--        <result column="save_file" property="saveFile"/>-->
-<!--    </resultMap>-->
-
-    <!-- 게시판 생성 -->
-    <insert id="createArticle" parameterType="CreateArticleReq">
-        insert into article (user_id, subject, content)
-        values (#{userId}, #{subject}, #{content})
-<!--        <selectKey resultType="int" keyProperty="articleId" order="AFTER">-->
-<!--            select last_insert_id()-->
-<!--        </selectKey>-->
-    </insert>
-
-<!--    &lt;!&ndash; 파일 등록 &ndash;&gt;-->
-<!--    <insert id="registerFile" parameterType="CreateArticleReq">-->
-<!--        insert into file_info (article_id, save_folder, original_file, save_file)-->
-<!--        values-->
-<!--        <foreach collection="fileInfos" item="fileinfo" separator=" , ">-->
-<!--            (#{articleNo}, #{fileinfo.saveFolder}, #{fileinfo.originalFile}, #{fileinfo.saveFile})-->
-<!--        </foreach>-->
-<!--    </insert>-->
-
-    <!-- 검색  -->
-    <select id="getArticle" parameterType="int" resultType="GetArticleRes">
-        select article_id, user_id, subject, content, hit, created_at
-        from article
-        where article_id = #{articleId}
-    </select>
-
     <sql id="search">
         <if test="word != null and word != ''">
             <if test="key == 'subject'">
@@ -60,6 +15,20 @@
         true
     </sql>
 
+    <!-- 게시판 생성 -->
+    <insert id="createArticle" parameterType="CreateArticleReq">
+        insert into article (user_id, subject, content)
+        values (#{userId}, #{subject}, #{content})
+    </insert>
+
+    <!-- 게시글 조회  -->
+    <select id="getArticle" parameterType="int" resultType="GetArticleRes">
+        select article_id, user_id, subject, content, hit, created_at
+        from article
+        where article_id = #{articleId}
+    </select>
+
+    <!-- 게시판 조회  -->
     <select id="listArticle" parameterType="map" resultType="GetArticleRes">
         select article_id, user_id, subject, hit, created_at
         from article
@@ -69,13 +38,13 @@
         limit #{start}, #{listsize}
     </select>
 
-    <!-- 수정 -->
+    <!-- 게시글 수정 -->
     <update id="modifyArticle" parameterType="ModifyArticleReq">
         update article set subject = #{subject}, content = #{content}
                          where article_id = #{articleId}
     </update>
 
-    <!-- 조회 수 -->
+    <!-- 조회 수 업데이트 -->
     <update id="updateHit" parameterType="int">
         update article
         set hit = hit + 1
@@ -87,4 +56,38 @@
         delete from article
         where article_id = #{articleId}
     </delete>
+
+
+    <!-- 댓글 생성 -->
+    <insert id="createComment" parameterType="CreateCommentReq">
+        <choose>
+            <when test="parentCommentId != null">
+                insert into comment (user_id, parent_comment_id,article_id, content)
+                values (#{userId},  #{parentCommentId},#{articleId}, #{content})
+            </when>
+            <otherwise>
+                insert into comment (user_id, article_id, content)
+                values (#{userId},#{articleId}, #{content})
+            </otherwise>
+        </choose>
+    </insert>
+
+    <select id="listComment" parameterType="map" resultType="GetCommentRes">
+        select comment_id, user_id, content, created_at
+        from comment
+        where article_id = #{articleId}
+    </select>
+
+    <!-- 수정 -->
+    <update id="modifyComment" parameterType="ModifyCommentReq">
+        update comment set  content = #{content}
+        where comment_id = #{commentId}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="deleteComment" parameterType="int">
+        delete from comment
+        where comment_id = #{commentId}
+    </delete>
+
 </mapper>

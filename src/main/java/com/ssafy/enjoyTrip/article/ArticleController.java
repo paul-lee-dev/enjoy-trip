@@ -16,10 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.File;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -199,5 +202,90 @@ public class ArticleController {
             e.printStackTrace();
         }
         return new ResponseEntity<Map<String, Object>>(map, status);
+    }
+    @ApiOperation(value = "게시글 내 파일 조회")
+    @GetMapping("/files/{articleId}")
+    public ResponseEntity<?> getFiles(@PathVariable int articleId) throws Exception {
+        List<GetFileRes> files = articleService.listFiles(articleId);
+        List<SendFile> fileList = new ArrayList<SendFile>();
+        for (int i = 0; i < files.size(); i++) {
+            fileList.add(new SendFile(i, files.get(i).getFileID()));
+        }
+        return ResponseEntity
+                .ok()
+                .body(new BaseResponse<>(fileList));
+    }
+
+    @ApiOperation(value = "파일 다운로드")
+    @GetMapping("/files/download/{fileId}")
+    public void getfile(HttpServletResponse response, @PathVariable("fileId") int fileId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        HttpStatus status = null;
+
+        try {
+            GetFileRes files = articleService.getFile(fileId);
+            String realPath = servletContext.getRealPath("/upload");
+
+            // db에서 폴더명 조회
+            String folderName = files.getSaveFolder();
+            String imageName = files.getSaveFile();
+            String imagePath = realPath + File.separator + folderName + File.separator + imageName;
+                File imagefile = new File(imagePath);
+                System.out.println(imagePath);
+
+            byte[] fileByte = FileUtils.readFileToByteArray(imagefile);
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition",
+                    "attachment; fileName=\"" + URLEncoder.encode("tistory.png", "UTF-8") + "\";");
+            response.setHeader("Content-Transfer-Encoding", "binary");
+
+            response.getOutputStream().write(fileByte);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
+    }
+
+    @ApiOperation(value = "파일 삭제")
+    @DeleteMapping("/files/{fileId}")
+    @Transactional
+    public ResponseEntity<?> deleteFile(@PathVariable int fileId) throws BaseException {
+        articleService.deleteFile(fileId);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+
+    @ApiOperation(value = "파일 삭제")
+    @DeleteMapping("/files/all/{articleId}")
+    @Transactional
+    public ResponseEntity<?> deleteFiles(@PathVariable int articleId) throws BaseException {
+        articleService.deleteAll(articleId);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    static class SendFile {
+        int i, idx;
+        public SendFile(int i, int idx) {
+            this.i = i;
+            this.idx = idx;
+        }
+        public int getI() {
+            return i;
+        }
+        public void setI(int i) {
+            this.i = i;
+        }
+        public int getIdx() {
+            return idx;
+        }
+        public void setIdx(int idx) {
+            this.idx = idx;
+        }
     }
 }
