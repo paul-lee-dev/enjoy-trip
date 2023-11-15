@@ -18,7 +18,7 @@
     <!-- ================= 게시판 ================= -->
 
 
-    <!-- 게시판 생성 -->
+    <!-- 게시글 생성 -->
     <insert id="createArticle" parameterType="CreateArticleReq">
         insert into article (user_id, subject, content)
         values (#{userId}, #{subject}, #{content})
@@ -26,14 +26,14 @@
 
     <!-- 게시글 조회  -->
     <select id="getArticle" parameterType="int" resultType="GetArticleRes">
-        select article_id, user_id, subject, content, hit, created_at
+        select article_id, user_id, subject, content, hit, created_at, updated_at
         from article
         where article_id = #{articleId}
     </select>
 
     <!-- 게시판 조회  -->
     <select id="listArticle" parameterType="map" resultType="GetArticleRes">
-        select article_id, user_id, subject, hit, created_at
+        select article_id, user_id, subject, hit, created_at, updated_at
         from article
         where
         <include refid="search"></include>
@@ -122,11 +122,11 @@
         select last_insert_id()
     </select>
 
-    <select id="listFiles" resultType="int" resultMap="getFileRes">
+    <select id="listFiles" parameterType="int" resultType="map">
         select * from files where article_id=#{articleId}
     </select>
 
-    <select id="getFile" resultType="int" resultMap="getFileRes">
+    <select id="getFile" parameterType="int" resultType="getFileRes">
         select * from files where file_id=#{fileId}
     </select>
 
