@@ -1,5 +1,6 @@
 package com.ssafy.enjoyTrip.user.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.user.dao.UserDao;
 import com.ssafy.enjoyTrip.user.entity.dto.*;
@@ -33,7 +34,13 @@ public class UserServiceImpl implements UserService
     private final UserDao userDao;
     private final HttpSession httpSession;
 
-    private final String googleUserInfoUrl = "https://www.googleapis.com/userinfo/v2/me";
+    private final Map<String, String> userInfoUrls = new HashMap<String, String>() {
+        {
+            put("google", "https://www.googleapis.com/userinfo/v2/me");
+            put("kakao", "https://kapi.kakao.com/v2/user/me");
+            put("naver", "https://openapi.naver.com/v1/nid/me");
+        }
+    };
 
 //    @Override
 //    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -67,20 +74,24 @@ public class UserServiceImpl implements UserService
 //        return null;
 //    }
 
+
     private GetUserRes saveOrUpdate(OAuthAttributes attributes, String accessTokenValue) throws Exception {
-        GetUserRes getUserRes = findByEmail(attributes.getEmail());
-        Map<String, String> newInfo = getNewestUserInfo(accessTokenValue);
-        String name = newInfo.get("name");
-        String email = newInfo.get("email");
-        String profileImgUrl = newInfo.get("picture");
+        GetUserRes getUserRes = findByNickname(attributes.getNickname());
+        String registrationId = attributes.getRegistrationId();
+        Map<String, String> newInfo = getNewestUserInfo(registrationId, accessTokenValue);
+        System.out.println("newInfo = " + newInfo);
+        System.out.println("attributes = " + attributes);
+        System.out.println("attributes.getName() = " + attributes.getNickname());
+        System.out.println("attributes.getEmail() = " + attributes.getEmail());
+        System.out.println("attributes.getProfileImgUrl() = " + attributes.getProfileImgUrl());
         if (getUserRes != null) {
             System.out.println("user 이미 있음");
             // 수정 필요
             modifyUser(ModifyUserReq.builder()
                     .userId(getUserRes.getUserId())
-                    .name(name)
-                    .email(email)
-                    .profileImgUrl(profileImgUrl)
+                    .nickname(attributes.getNickname())
+                    .email(attributes.getEmail())
+                    .profileImgUrl(attributes.getProfileImgUrl())
                     .phoneNumber(getUserRes.getPhoneNumber())
                     .nickname(getUserRes.getNickname())
                     .build());
@@ -88,17 +99,19 @@ public class UserServiceImpl implements UserService
         } else {
             System.out.println("새 유저 생성");
             userDao.createSnsUser(SnsInfoDto.builder()
-                    .email(email)
-                    .name(name)
-                    .profileImgUrl(profileImgUrl)
-                    .snsType("google")
+                    .nickname(attributes.getNickname())
+                    .email(attributes.getEmail())
+                    .profileImgUrl(attributes.getProfileImgUrl())
+                    .snsType(attributes.getRegistrationId())
                     .build());
             System.out.println("새 유저 생성 완료");
         }
-        return findByEmail(attributes.getEmail());
+        return attributes.getRegistrationId().equals("google")
+                ? findByEmail(attributes.getEmail())
+                : findByNickname(attributes.getNickname());
     }
 
-    private Map<String, String> getNewestUserInfo(String accessTokenValue) {
+    private Map<String, String> getNewestUserInfo(String registrationId, String accessTokenValue) {
         HttpHeaders headers = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
 
@@ -108,9 +121,22 @@ public class UserServiceImpl implements UserService
 
         HttpEntity<?> userInfoEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<HashMap> userInfoRes = restTemplate.exchange(googleUserInfoUrl, HttpMethod.GET,
+        ResponseEntity<HashMap> userInfoRes = restTemplate.exchange(userInfoUrls.get(registrationId), HttpMethod.GET,
                 userInfoEntity, HashMap.class);
-        return userInfoRes.getBody();
+        Map<String, String> result = userInfoRes.getBody();
+
+//        System.out.println("result = " + result);
+//        System.out.println("result.get() = " + result.get("properties"));
+//        if (registrationId.equals("kakao")) {
+//            ObjectMapper mapper = new ObjectMapper();
+//            try {
+//                result = mapper.readValue(result.get("properties"), Map.class);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                System.out.println("카카오 로그인 응답 파싱 실패");
+//            }
+//        }
+        return result;
     }
 
 
@@ -134,18 +160,18 @@ public class UserServiceImpl implements UserService
         }
     }
 
-    /**
-     * 로그인 (세션)
-     * @param loginReq, session
-     * @throws BaseException
-     */
-    public void login(LoginReq loginReq, HttpSession session) throws BaseException { // findByEmail에서 예외 맞춰서 throw하므로, 그대로 던지면 됨
-        GetUserRes dbUser = findByEmail(loginReq.getEmail());
-        if (dbUser == null) throw new BaseException(WRONG_EMAIL);
-        if (!dbUser.getPassword().equals(loginReq.getPassword())) throw new BaseException(WRONG_PASSWORD);
-
-        session.setAttribute("loginUser", dbUser);
-    }
+//    /**
+//     * 로그인 (세션)
+//     * @param loginReq, session
+//     * @throws BaseException
+//     */
+//    public void login(LoginReq loginReq, HttpSession session) throws BaseException { // findByEmail에서 예외 맞춰서 throw하므로, 그대로 던지면 됨
+//        GetUserRes dbUser = findByEmail(loginReq.getEmail());
+//        if (dbUser == null) throw new BaseException(WRONG_EMAIL);
+//        if (!dbUser.getPassword().equals(loginReq.getPassword())) throw new BaseException(WRONG_PASSWORD);
+//
+//        session.setAttribute("loginUser", dbUser);
+//    }
 
     /**
      * 로그아웃(세션)
@@ -174,15 +200,15 @@ public class UserServiceImpl implements UserService
         }
     }
 
-    public void modifyPassword(ModifyPwdReq modifyPwdReq) throws BaseException {
-        checkRetypePassword(modifyPwdReq.getPassword(), modifyPwdReq.getPasswordCheck());
-        try {
-            userDao.modifyPassword(modifyPwdReq);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BaseException(DB_ERROR);
-        }
-    }
+//    public void modifyPassword(ModifyPwdReq modifyPwdReq) throws BaseException {
+//        checkRetypePassword(modifyPwdReq.getPassword(), modifyPwdReq.getPasswordCheck());
+//        try {
+//            userDao.modifyPassword(modifyPwdReq);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new BaseException(DB_ERROR);
+//        }
+//    }
 
     public void deleteUser(Integer userId) throws BaseException {
         try {
@@ -224,7 +250,7 @@ public class UserServiceImpl implements UserService
         }
     }
 
-    private GetUserRes findByNickname(String nickname) throws BaseException {
+    public GetUserRes findByNickname(String nickname) throws BaseException {
         try {
             return userDao.findByNickname(nickname);
         } catch (Exception e) {
