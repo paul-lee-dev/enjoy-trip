@@ -13,13 +13,12 @@ public class Spot {
     private String address;
     private String tel;
     private String image;
-    private String hit;
-    private String theme;
-    private String contentId;
-    private String lat;
-    private String lang;
-    private String sidoId;
-    private String gugunId;
+    private int hit;
+    private int contentId;
+    private double lat;
+    private double lang;
+    private int sidoId;
+    private int gugunId;
     private String desc;
-    private String memo;
+    private String mlevel;
 }

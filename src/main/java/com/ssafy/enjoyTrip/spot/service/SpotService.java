@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface SpotService {
-    List<GetSpotRes> getSpotList(Map<String, String> map) throws BaseException;
+    List<GetSpotRes> getSpotList(Map<String, Integer> map) throws BaseException;
     List<GetSpotRes> searchSpot(String keyword) throws BaseException;
-    GetSpotRes getSpot(int spotId) throws BaseException;
+    GetSpotRes getSpotDetail(int spotId) throws BaseException;
     List<SidoDto> getSidoList() throws BaseException;
     List<GugunDto> getGugunList(int sidoId) throws BaseException;
 }

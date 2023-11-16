@@ -5,11 +5,10 @@
 
     <!-- getSpot -->
     <select id="getSpotList" parameterType="Map" resultType="getSpotRes">
-        select i.attraction_info_id as spotId, title, concat(addr1, ' ', addr2) as address, tel,
-               first_image as image, readcount as hit,
+        select i.attraction_info_id as spotId, title, concat(addr1, ' ', addr2) as address, tel, first_image as image,
+               readcount as hit,
                content_type_id as contentId, sido_code as sidoCode,
-               gugun_code as gugunCode, latitude as lat,longitude as lon,
-               d.overview as description
+               gugun_code as gugunCode, latitude as lat,longitude as lon
         from attraction_info i
              left join attraction_description d on i.attraction_info_id = d.attraction_info_id
         <if test="key != null">
@@ -18,7 +17,7 @@
                     title like concat('%', #{word}, '%') and
                 </if>
                 <if test='key.equals("type")'>
-                    content_type_id = #{contentTypeId} and
+                    attraction_info_id = #{attractionInfoId} and
                 </if>
                 <if test='key.equals("region")'>
                     sido_code = #{sidoCode} and
@@ -26,12 +25,10 @@
                         gugun_code = #{gugunCode} and
                     </if>
                 </if>
-                true
         </if>
-            limit ${start}, ${pgsize}
     </select>
 
-    <select id="getSpot" parameterType="int" resultType="getSpotRes">
+    <select id="getSpotDetail" parameterType="int" resultType="getSpotRes">
         select i.attraction_info_id as spotId, title, concat(addr1, ' ', addr2) as address, tel,
                 first_image as image, readcount as hit,
                 content_type_id as contentId, sido_code as sidoCode,
@@ -42,12 +39,12 @@
         where i.attraction_info_id = #{spotId}
     </select>
 
-    <select id="getSidoList" resultType="sidoDto">
+    <select id="getSidoList" resultType="SidoDto">
         select sido_code, sido_name
         from sido
     </select>
 
-    <select id="getGugunList" parameterType="int"   resultType="gugunDto">
+    <select id="getGugunList" parameterType="int" resultType="GugunDto">
         select gugun_code, gugun_name, sido_code
         from gugun
         where sido_code = #{sidoCode}
