@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 public class GetUserRes {
     private int userId;
     private String email;
-    private String password;
-    private String name;
     private String nickname;
     private LocalDateTime createdAt;
     private String phoneNumber;
@@ -25,7 +23,6 @@ public class GetUserRes {
         return User.builder()
                 .userId(userId)
                 .email(email)
-                .name(name)
                 .nickname(nickname)
                 .createdAt(createdAt)
                 .updatedAt(null)

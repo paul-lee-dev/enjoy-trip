@@ -15,7 +15,7 @@ public class OAuthAttributes {
     private String registrationId;
     private Map<String, Object> attributes;
     private String nameAttributeKey;
-    private String name;
+    private String nickname;
     private String email;
     private String profileImgUrl;
 
@@ -34,9 +34,9 @@ public class OAuthAttributes {
                 .registrationId("google")
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
-                .name((String) attributes.get("name"))
+                .nickname((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
-                .profileImgUrl((String) attributes.get("profileImgUrl"))
+                .profileImgUrl((String) attributes.get("picture"))
                 .build();
     }
 
@@ -48,7 +48,7 @@ public class OAuthAttributes {
                 .registrationId("kakao")
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
-                .name((String) kakaoProfile.get("nickname"))
+                .nickname((String) kakaoProfile.get("nickname"))
                 .profileImgUrl((String) kakaoProfile.get("profile_image_url"))
 //                .email((String) kakaoAccount.get("email"))
                 .build();
@@ -56,8 +56,7 @@ public class OAuthAttributes {
 
     public GetUserRes toEntity() {
         return GetUserRes.builder()
-                .name(name)
-                .email(email)
+                .nickname(nickname)
                 .role("USER")
                 .build();
     }

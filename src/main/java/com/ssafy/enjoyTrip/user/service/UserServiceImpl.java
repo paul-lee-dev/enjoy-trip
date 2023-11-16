@@ -79,28 +79,20 @@ public class UserServiceImpl implements UserService
     }
 
     private GetUserRes saveOrUpdate(OAuthAttributes attributes, String accessTokenValue) throws Exception {
-        GetUserRes getUserRes = findByEmail(attributes.getEmail());
+        GetUserRes getUserRes = findByNickname(attributes.getNickname());
         String registrationId = attributes.getRegistrationId();
         Map<String, String> newInfo = getNewestUserInfo(registrationId, accessTokenValue);
         System.out.println("newInfo = " + newInfo);
         System.out.println("attributes = " + attributes);
-        System.out.println("attributes.getName() = " + attributes.getName());
+        System.out.println("attributes.getName() = " + attributes.getNickname());
         System.out.println("attributes.getEmail() = " + attributes.getEmail());
         System.out.println("attributes.getProfileImgUrl() = " + attributes.getProfileImgUrl());
         if (getUserRes != null) {
             System.out.println("user 이미 있음");
-            System.out.println("modifyUser = " + ModifyUserReq.builder()
-                    .userId(getUserRes.getUserId())
-                    .name(attributes.getName())
-                    .email(attributes.getEmail())
-                    .profileImgUrl(attributes.getProfileImgUrl())
-                    .phoneNumber(getUserRes.getPhoneNumber())
-                    .nickname(getUserRes.getNickname())
-                    .build());
             // 수정 필요
             modifyUser(ModifyUserReq.builder()
                     .userId(getUserRes.getUserId())
-                    .name(attributes.getName())
+                    .nickname(attributes.getNickname())
                     .email(attributes.getEmail())
                     .profileImgUrl(attributes.getProfileImgUrl())
                     .phoneNumber(getUserRes.getPhoneNumber())
@@ -109,15 +101,9 @@ public class UserServiceImpl implements UserService
             System.out.println("modify userInfo");
         } else {
             System.out.println("새 유저 생성");
-            System.out.println("snsUserInfo = " + SnsInfoDto.builder()
-                    .email(attributes.getEmail())
-                    .name(attributes.getName())
-                    .profileImgUrl(attributes.getProfileImgUrl())
-                    .snsType(attributes.getRegistrationId())
-                    .build());
             userDao.createSnsUser(SnsInfoDto.builder()
+                    .nickname(attributes.getNickname())
                     .email(attributes.getEmail())
-                    .name(attributes.getName())
                     .profileImgUrl(attributes.getProfileImgUrl())
                     .snsType(attributes.getRegistrationId())
                     .build());
@@ -125,7 +111,7 @@ public class UserServiceImpl implements UserService
         }
         return attributes.getRegistrationId().equals("google")
                 ? findByEmail(attributes.getEmail())
-                : findByName(attributes.getName());
+                : findByNickname(attributes.getNickname());
     }
 
     private Map<String, String> getNewestUserInfo(String registrationId, String accessTokenValue) {
@@ -177,18 +163,18 @@ public class UserServiceImpl implements UserService
         }
     }
 
-    /**
-     * 로그인 (세션)
-     * @param loginReq, session
-     * @throws BaseException
-     */
-    public void login(LoginReq loginReq, HttpSession session) throws BaseException { // findByEmail에서 예외 맞춰서 throw하므로, 그대로 던지면 됨
-        GetUserRes dbUser = findByEmail(loginReq.getEmail());
-        if (dbUser == null) throw new BaseException(WRONG_EMAIL);
-        if (!dbUser.getPassword().equals(loginReq.getPassword())) throw new BaseException(WRONG_PASSWORD);
-
-        session.setAttribute("loginUser", dbUser);
-    }
+//    /**
+//     * 로그인 (세션)
+//     * @param loginReq, session
+//     * @throws BaseException
+//     */
+//    public void login(LoginReq loginReq, HttpSession session) throws BaseException { // findByEmail에서 예외 맞춰서 throw하므로, 그대로 던지면 됨
+//        GetUserRes dbUser = findByEmail(loginReq.getEmail());
+//        if (dbUser == null) throw new BaseException(WRONG_EMAIL);
+//        if (!dbUser.getPassword().equals(loginReq.getPassword())) throw new BaseException(WRONG_PASSWORD);
+//
+//        session.setAttribute("loginUser", dbUser);
+//    }
 
     /**
      * 로그아웃(세션)
@@ -217,15 +203,15 @@ public class UserServiceImpl implements UserService
         }
     }
 
-    public void modifyPassword(ModifyPwdReq modifyPwdReq) throws BaseException {
-        checkRetypePassword(modifyPwdReq.getPassword(), modifyPwdReq.getPasswordCheck());
-        try {
-            userDao.modifyPassword(modifyPwdReq);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BaseException(DB_ERROR);
-        }
-    }
+//    public void modifyPassword(ModifyPwdReq modifyPwdReq) throws BaseException {
+//        checkRetypePassword(modifyPwdReq.getPassword(), modifyPwdReq.getPasswordCheck());
+//        try {
+//            userDao.modifyPassword(modifyPwdReq);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new BaseException(DB_ERROR);
+//        }
+//    }
 
     public void deleteUser(Integer userId) throws BaseException {
         try {
@@ -267,9 +253,9 @@ public class UserServiceImpl implements UserService
         }
     }
 
-    private GetUserRes findByName(String name) throws BaseException {
+    public GetUserRes findByNickname(String nickname) throws BaseException {
         try {
-            return userDao.findByName(name);
+            return userDao.findByNickname(nickname);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException(DB_ERROR);
@@ -282,7 +268,7 @@ public class UserServiceImpl implements UserService
      * @throws BaseException
      */
     private void checkUniqueNickname(int userId, String nickname) throws BaseException {
-        GetUserRes sameNicknameUser = findByName(nickname);
+        GetUserRes sameNicknameUser = findByNickname(nickname);
         if (sameNicknameUser != null && sameNicknameUser.getUserId() != userId)
             throw new BaseException(DUPLICATED_NICKNAME);
     }

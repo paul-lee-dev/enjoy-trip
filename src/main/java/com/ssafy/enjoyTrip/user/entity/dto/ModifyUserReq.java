@@ -21,10 +21,6 @@ public class ModifyUserReq {
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식이 올바르지 않습니다.")
     private String email;
 
-    @NotBlank(message = "이름을 입력해주세요.")
-    @Pattern(regexp = "^[A-Za-z가-힣]{1,20}$" , message = "이름에 특수문자, 숫자는 사용할 수 없습니다.")
-    private String name;
-
     private String profileImgUrl;
 
     @NotBlank(message = "닉네임을 입력해주세요.")

@@ -9,9 +9,9 @@ public interface UserDao {
     void createSnsUser(SnsInfoDto snsInfoDto);
     GetUserRes findById(int userId);
     GetUserRes findByEmail(String email);
-    GetUserRes findByName(String nickname);
+    GetUserRes findByNickname(String nickname);
     void modifyUser(ModifyUserReq modifyUserReq);
-    void modifyPassword(ModifyPwdReq modifyPwdReq);
+//    void modifyPassword(ModifyPwdReq modifyPwdReq);
     void deleteUser(int userId);
     List<GetUserRes> findAll();
 }

@@ -12,7 +12,7 @@ import lombok.ToString;
 public class SnsInfoDto {
     private int userId;
     private String email;
-    private String name;
+    private String nickname;
     private String profileImgUrl;
     private String snsType;
 }
