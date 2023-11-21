@@ -12,7 +12,7 @@ public class GetPlanRes {
     private int userId;
     private String title;
     private String orderString;
-    private List<PlanListDto> planlists;
+    private List<List<PlanListDto>> planLists;
 
     private Integer pageNo;
 
@@ -24,7 +24,7 @@ public class GetPlanRes {
         this.pageNo = pageNo;
     }
 
-    public void setPlanlists(List<PlanListDto> planlists) {
-        this.planlists = planlists;
+    public void setPlanLists(List<List<PlanListDto>> planLists) {
+        this.planLists = planLists;
     }
 }

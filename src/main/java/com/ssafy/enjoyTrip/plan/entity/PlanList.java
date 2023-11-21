@@ -11,4 +11,5 @@ public class PlanList {
     private int planListId;
     private int planId;
     private int attractionId;
+    private int dayNum;
 }

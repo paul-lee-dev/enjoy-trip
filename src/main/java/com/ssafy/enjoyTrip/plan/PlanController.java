@@ -18,7 +18,6 @@ import java.util.List;
 public class PlanController {
 
     private final PlanService planService;
-
     public PlanController(PlanService planService) {
         this.planService = planService;
     }
@@ -59,7 +58,7 @@ public class PlanController {
     public ResponseEntity<?> getPlan(@PathVariable int planId, @RequestParam int pageNo) throws BaseException {
         return ResponseEntity
                 .ok()
-                .body(planService.getPlan(planId, pageNo));
+                .body(new BaseResponse<>(planService.getPlan(planId, pageNo)));
     }
 
     // create
@@ -74,7 +73,7 @@ public class PlanController {
     }
 
     @ApiOperation(value="관광지 추가")
-    @PostMapping("/planlist")
+    @PostMapping("/planlists")
     public ResponseEntity<?> createPlanList(@RequestBody CreatePlanListReq createPlanListReq) throws BaseException {
         planService.createPlanList(createPlanListReq);
         return ResponseEntity
@@ -103,7 +102,7 @@ public class PlanController {
     }
 
     @ApiOperation(value="계획에 담긴 관광지(planlist) 삭제")
-    @DeleteMapping("/planlist/{planListId}")
+    @DeleteMapping("/planlists/{planListId}")
     public ResponseEntity<?> deletePlanList(@PathVariable int planListId) throws BaseException {
         planService.deletePlanList(planListId);
         return ResponseEntity

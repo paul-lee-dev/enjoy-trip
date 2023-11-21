@@ -8,7 +8,9 @@ import java.util.List;
 public interface PlanDao {
     List<GetPlansRes> getPlans(GetPlansReq getPlansReq) throws SQLException;
     int getPlanCnt() throws SQLException;
-    GetPlanRes getPlan(int planId) throws SQLException;
+    GetPlanRes getPlanByPlanId(int planId) throws SQLException;
+    ModifyOrderReq getPlanUsingPlanListId(int planId) throws SQLException;
+    List<PlanListDto> getPlanLists(int planId) throws SQLException;
     void createPlan(CreatePlanReq createPlanReq) throws SQLException;
     void createPlanList(CreatePlanListReq createPlanListReq) throws SQLException;
     void modifyOrder(ModifyOrderReq modifyOrderReq) throws SQLException;

@@ -1,14 +1,17 @@
 package com.ssafy.enjoyTrip.plan.service;
 
 import com.ssafy.enjoyTrip.common.BaseException;
+import com.ssafy.enjoyTrip.common.constant.Scope;
 import com.ssafy.enjoyTrip.plan.dao.PlanDao;
+import com.ssafy.enjoyTrip.plan.entity.PlanList;
 import com.ssafy.enjoyTrip.plan.entity.dto.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.ssafy.enjoyTrip.common.BaseResponseStatus.DB_ERROR;
+import static com.ssafy.enjoyTrip.common.BaseResponseStatus.*;
 import static com.ssafy.enjoyTrip.common.constant.Constants.PAGE_SIZE;
 
 @Service
@@ -47,9 +50,12 @@ public class PlanService {
 
     public GetPlanRes getPlan(int planId, int pageNo) throws BaseException {
         try {
-            GetPlanRes getPlanRes = planDao.getPlan(planId);
+            GetPlanRes getPlanRes = planDao.getPlanByPlanId(planId);
+            List<PlanListDto> planLists = planDao.getPlanLists(planId);
+            List<List<PlanListDto>> dailyPlans = sortPlanLists(planLists, getPlanRes.getOrderString());
+
             if (getPlanRes != null) {
-                getPlanRes.setPlanlists(sortPlanLists(getPlanRes.getPlanlists(), getPlanRes.getOrderString()));
+                getPlanRes.setPlanLists(dailyPlans);
                 getPlanRes.setPageNo(pageNo);
             }
 //            System.out.println(getPlanRes);
@@ -60,9 +66,9 @@ public class PlanService {
         }
     }
 
-
     public void createPlan(CreatePlanReq createPlanReq) throws BaseException {
         try {
+            if (createPlanReq.getScope() == null) createPlanReq.setScope(Scope.PUBLIC);
             planDao.createPlan(createPlanReq);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,7 +77,7 @@ public class PlanService {
     }
 
     /**
-     * 새로운 planlist를 생성하고,<br>
+     * 새로운 planList를 생성하고,<br>
      * 소속 plan의 orderString 마지막에 추가
      * @param createPlanListReq
      * @throws BaseException
@@ -92,7 +98,6 @@ public class PlanService {
      */
     public void modifyOrder(ModifyOrderReq modifyOrderReq) throws BaseException {
         try {
-
             planDao.modifyOrder(modifyOrderReq);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -109,8 +114,20 @@ public class PlanService {
         }
     }
 
+    @Transactional
     public void deletePlanList(int planListId) throws BaseException {
         try {
+            ModifyOrderReq plan = planDao.getPlanUsingPlanListId(planListId);
+            if (plan == null) throw new BaseException(WRONG_PLANLIST_ID);
+            String orderString = plan.getOrderString();
+
+            if (orderString.indexOf(" " + planListId) == -1) throw new BaseException(ORDERSTRING_ERROR);
+            // 방문 순서 정보에서 삭제
+            String newOrderString = orderString.replace(" " + planListId, ""); // orderString 생성 순서에 주의
+            plan.setOrderString(newOrderString);
+            planDao.modifyOrder(plan);
+
+            // planList에서 삭제
             planDao.deletePlanList(planListId);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,22 +136,47 @@ public class PlanService {
     }
 
     /**
-     * @param planlists 정렬되지 않은 planlists
+     * @param planLists 정렬되지 않은 planLists
      * @param orderString order 정보를 담은 문자열
-     * @return 정렬된 planlists
+     * @return 정렬된 planLists
      */
-    private List<PlanListDto> sortPlanLists(List<PlanListDto> planlists, String orderString) {
-        int n = planlists.size();
-        List<PlanListDto> result = new ArrayList<>(n);
+    private List<List<PlanListDto>> sortPlanLists(List<PlanListDto> planLists, String orderString) {
+        int n = planLists.size();
+        List<PlanListDto> sortedPlanLists = new ArrayList<>(n);
         Map<Integer, PlanListDto> mapForSorting = new HashMap<>();
-        planlists.forEach((planlist) -> mapForSorting.put(planlist.getPlanListId(), planlist));
+        planLists.forEach((planList) -> mapForSorting.put(planList.getPlanListId(), planList));
+
+        int lastDayNum = -1;
 
         StringTokenizer st = new StringTokenizer(orderString);
         for (int i = 0; i < n; i++) {
-            int planlistId = Integer.parseInt(st.nextToken());
-            result.add(mapForSorting.get(planlistId));
+            int planListId = Integer.parseInt(st.nextToken());
+            PlanListDto cur = mapForSorting.get(planListId);
+            lastDayNum = Math.max(lastDayNum, cur.getDayNum());
+
+            sortedPlanLists.add(cur);
         }
-        return result;
+        return makeDailyPlans(sortedPlanLists, lastDayNum);
+    }
+
+    /**
+     * 순서대로 정렬된 관광계획 -> 일별로 분할해서 반환
+     * @param sortedPlanLists
+     * @param lastDayNum
+     * @return dailyPlans = List / 1-based
+     */
+    private List<List<PlanListDto>> makeDailyPlans(List<PlanListDto> sortedPlanLists, int lastDayNum) {
+        List<List<PlanListDto>> dailyPlans = new ArrayList<>(lastDayNum+1);
+
+        for (int i = 0; i <= lastDayNum; i++) {
+            dailyPlans.add(new ArrayList<>());
+        }
+
+        sortedPlanLists.forEach((planList) -> {
+            dailyPlans.get(planList.getDayNum()).add(planList);
+        });
+
+        return dailyPlans;
     }
 
 }

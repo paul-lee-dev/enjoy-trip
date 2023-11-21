@@ -1,6 +1,7 @@
 package com.ssafy.enjoyTrip.fileUpload;
 
 import com.ssafy.enjoyTrip.common.BaseException;
+import com.ssafy.enjoyTrip.common.BaseResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,6 @@ public class FileController {
     public ResponseEntity<?> uploadFile(@RequestPart MultipartFile file) throws BaseException {
         return ResponseEntity
                 .ok()
-                .body(fileService.uploadFile(file));
+                .body(new BaseResponse<>(fileService.uploadFile(file)));
     }
 }

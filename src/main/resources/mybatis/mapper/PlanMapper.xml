@@ -10,10 +10,10 @@
         <result column="user_id"    property="userId"/>
         <result column="title"    property="title"/>
         <result column="order_string"   property="orderString"/>
-        <collection property="planlists"    ofType="PlanListDto">
-            <result column="plan_list_id"   property="planListId"/>
-            <result column="attraction_id"  property="attractionId"/>
-        </collection>
+<!--        <collection property="planlists"    ofType="PlanListDto">-->
+<!--            <result column="plan_list_id"   property="planListId"/>-->
+<!--            <result column="attraction_id"  property="attractionId"/>-->
+<!--        </collection>-->
     </resultMap>
     <!-- 조회 -->
     <select id="getPlans" parameterType="GetPlansReq" resultType="GetPlansRes">
@@ -34,11 +34,30 @@
         select count(*) from plan;
     </select>
 
-    <select id="getPlan" parameterType="int" resultMap="getPlanMap">
-        select p.plan_id, p.user_id, p.title, p.order_string,
-               pl.plan_list_id, pl.attraction_id
-        from plan p left join plan_list pl on (p.plan_id = pl.plan_id)
-        where p.plan_id = #{planId}
+    <sql id="getPlanNormal">
+        select plan_id, user_id, title, order_string
+        from plan
+    </sql>
+
+    <select id="getPlanByPlanId" parameterType="int" resultType="GetPlanRes">
+        <include refid="getPlanNormal" />
+        where plan_id = #{planId}
+    </select>
+
+    <select id="getPlanLists" parameterType="int" resultType="PlanListDto">
+        select plan_list_id, plan_id, attraction_id, dayNum
+        from plan_list
+        where plan_id = #{plan_id}
+    </select>
+
+    <select id="getPlanUsingPlanListId" parameterType="int" resultType="modifyOrderReq">
+        select p.plan_id, p.order_string
+        from plan p
+        where plan_id = (
+            select plan_id
+            from plan_list
+            where plan_list_id = #{plan_list_id}
+            )
     </select>
 
     <!-- 생성 -->
@@ -47,7 +66,7 @@
         values(#{userId}, #{scope}, #{title})
     </insert>
 
-    <insert id="createPlanList" parameterType="CreatePlanListReq">
+    <insert id="createPlanList" parameterType="CreatePlanListReq" >
         insert into plan_list(plan_id, attraction_id)
         values(#{planId}, #{attractionId});
 

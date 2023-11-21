@@ -34,7 +34,7 @@ public enum BaseResponseStatus {
     DUPLICATED_NICKNAME(3041, "중복된 nickname입니다"),
 
     // login
-    NEED_LOGIN(3050, "로그인이 필요합니다.");
+    NEED_LOGIN(3050, "로그인이 필요합니다."),
 
 
     /**
@@ -43,11 +43,14 @@ public enum BaseResponseStatus {
 
 
     /**
-     * 5xxx : board
+     * 5xxx : article
      */
+
     /**
-     * 56xxx : plan
+     * 6xxx : plan
      */
+    WRONG_PLANLIST_ID(6040, "계획에 해당 관광지가 없습니다."),
+    ORDERSTRING_ERROR(6060, "orderString 오류");
 
 
 
