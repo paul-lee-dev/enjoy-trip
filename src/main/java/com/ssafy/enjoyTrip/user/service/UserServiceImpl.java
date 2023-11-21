@@ -14,6 +14,13 @@ import org.springframework.http.*;
 //import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 //import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 //import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,7 +35,7 @@ import static com.ssafy.enjoyTrip.common.BaseResponseStatus.*;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService
-//        , OAuth2UserService<OAuth2UserRequest, OAuth2User>
+        , OAuth2UserService<OAuth2UserRequest, OAuth2User>
 {
 
     private final UserDao userDao;
@@ -42,37 +49,37 @@ public class UserServiceImpl implements UserService
         }
     };
 
-//    @Override
-//    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-//        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
-//        OAuth2User oAuth2User = delegate.loadUser(userRequest);
-//
-//        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-//        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-//                .getUserInfoEndpoint().getUserNameAttributeName();
-//        String accessTokenValue = userRequest.getAccessToken().getTokenValue();
-//
-//        OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-//
-//        try {
-//            GetUserRes loginUser = saveOrUpdate(attributes,accessTokenValue);
-//
-//            httpSession.setAttribute("loginUser", loginUser);
-//
-//            return new DefaultOAuth2User(
-//                    Collections
-//                            .singleton(
-//                            new SimpleGrantedAuthority(
-//                                    "ROLE_"+loginUser
-//                                            .getRole())),
-//                    attributes.getAttributes(),
-//                    attributes.getNameAttributeKey());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            System.out.println("소셜 로그인 - saveOrUpdate 중 오류");
-//        }
-//        return null;
-//    }
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
+        OAuth2User oAuth2User = delegate.loadUser(userRequest);
+
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
+                .getUserInfoEndpoint().getUserNameAttributeName();
+        String accessTokenValue = userRequest.getAccessToken().getTokenValue();
+
+        OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+
+        try {
+            GetUserRes loginUser = saveOrUpdate(attributes,accessTokenValue);
+
+            httpSession.setAttribute("loginUser", loginUser);
+
+            return new DefaultOAuth2User(
+                    Collections
+                            .singleton(
+                            new SimpleGrantedAuthority(
+                                    "ROLE_"+loginUser
+                                            .getRole())),
+                    attributes.getAttributes(),
+                    attributes.getNameAttributeKey());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("소셜 로그인 - saveOrUpdate 중 오류");
+        }
+        return null;
+    }
 
 
     private GetUserRes saveOrUpdate(OAuthAttributes attributes, String accessTokenValue) throws Exception {
@@ -124,18 +131,6 @@ public class UserServiceImpl implements UserService
         ResponseEntity<HashMap> userInfoRes = restTemplate.exchange(userInfoUrls.get(registrationId), HttpMethod.GET,
                 userInfoEntity, HashMap.class);
         Map<String, String> result = userInfoRes.getBody();
-
-//        System.out.println("result = " + result);
-//        System.out.println("result.get() = " + result.get("properties"));
-//        if (registrationId.equals("kakao")) {
-//            ObjectMapper mapper = new ObjectMapper();
-//            try {
-//                result = mapper.readValue(result.get("properties"), Map.class);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                System.out.println("카카오 로그인 응답 파싱 실패");
-//            }
-//        }
         return result;
     }
 

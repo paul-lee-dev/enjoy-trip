@@ -38,6 +38,5 @@ out/
 /gradle/
 /gradlew
 /gradlew.bat
-/src/main/resources/application-secret.properties
 /src/main/resources/application-secret.yaml
-
+**/application-secret.yaml
