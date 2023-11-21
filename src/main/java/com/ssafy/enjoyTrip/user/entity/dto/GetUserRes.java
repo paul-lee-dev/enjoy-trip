@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+@ToString
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 public class GetUserRes {
     private int userId;
     private String email;
+    private String password;
     private String nickname;
     private LocalDateTime createdAt;
     private String phoneNumber;

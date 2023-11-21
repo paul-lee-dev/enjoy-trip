@@ -18,6 +18,9 @@ public enum BaseResponseStatus {
 
     DB_ERROR(2400, "DB 에러"),
     SESSION_ERROR(2420, "세션이 이미 만료되었습니다."),
+    FILE_UPLOAD_ERROR(2440, "파일 업로드 중 오류"),
+    FILE_DOWNLOAD_ERROR(2441, "파일 다운로드 중 오류"),
+    WRONG_IMG_TYPE(2442, "이미지 파일만 등록 가능합니다."),
 
 
     // mismatch

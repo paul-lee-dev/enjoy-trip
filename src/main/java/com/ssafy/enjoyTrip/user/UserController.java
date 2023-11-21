@@ -58,16 +58,16 @@ public class UserController {
                 .body(new BaseResponse<>(userList));
     }
 
-//    /**
-//     * 로그인(세션)
-//     */
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody LoginReq loginReq, HttpSession session) throws BaseException {
-//        userService.login(loginReq, session);
-//        return ResponseEntity
-//                .ok()
-//                .build();
-//    }
+    /**
+     * 로그인(세션)
+     */
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginReq loginReq, HttpSession session) throws BaseException {
+        userService.login(loginReq, session);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
 
     /**
      * 로그아웃(세션)
@@ -112,18 +112,18 @@ public class UserController {
                 .build();
     }
 
-//    /**
-//     * 비밀번호 변경 (비밀번호 찾기로 변경 예정)
-//     * @param modifyPwdReq
-//     */
-//    @ApiOperation(value="비밀번호 수정")
-//    @PatchMapping("/pwd")
-//    public ResponseEntity<?> modifyPassword(@RequestBody @Valid ModifyPwdReq modifyPwdReq) throws BaseException {
-//        userService.modifyPassword(modifyPwdReq);
-//        return ResponseEntity
-//                .ok()
-//                .build();
-//    }
+    /**
+     * 비밀번호 변경 (비밀번호 찾기로 변경 예정)
+     * @param modifyPwdReq
+     */
+    @ApiOperation(value="비밀번호 수정")
+    @PatchMapping("/pwd")
+    public ResponseEntity<?> modifyPassword(@RequestBody @Valid ModifyPwdReq modifyPwdReq) throws BaseException {
+        userService.modifyPassword(modifyPwdReq);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
 
     /**
      * 회원탈퇴

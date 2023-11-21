@@ -5,10 +5,10 @@
 
     <!-- 회원가입 -->
     <insert id="createUser" parameterType="createUserReq">
-        insert into user(email, nickname,
-                         phone_number)
-        values (#{email}, #{nickname}
-               , #{phoneNumber})
+        insert into user(email, password,
+                         nickname, phone_number)
+        values (#{email}, #{password},
+                #{nickname}, #{phoneNumber})
     </insert>
 
     <insert id="createSnsUser" parameterType="snsInfoDto">
@@ -38,17 +38,17 @@
 
     <!-- 정보조회 -->
     <select id="findById" parameterType="int" resultType="getUserRes">
-        select user_id, email, nickname, profile_img as profile_img_url,
+        select user_id, email, password, nickname, profile_img as profile_img_url,
                created_at, phone_number, status, role
         from user where user_id = #{userId} and status != 'deleted'
     </select>
     <select id="findByEmail" parameterType="String" resultType="getUserRes">
-        select user_id, email, nickname, profile_img as profile_img_url,
+        select user_id, email, password, nickname, profile_img as profile_img_url,
                created_at, phone_number, status
         from user where email = #{email} and status != 'deleted'
     </select>
     <select id="findByNickname" parameterType="String" resultType="getUserRes">
-        select user_id, email, nickname, profile_img as profile_img_url,
+        select user_id, email, password, nickname, profile_img as profile_img_url,
                created_at, phone_number, status
         from user where nickname = #{nickname} and status != 'deleted'
     </select>
@@ -66,10 +66,10 @@
         where user_id = #{userId}
     </update>
 
-<!--    <update id="modifyPassword" parameterType="modifyPwdReq">-->
-<!--        update user set password = #{password}-->
-<!--        where user_id = #{userId}-->
-<!--    </update>-->
+    <update id="modifyPassword" parameterType="modifyPwdReq">
+        update user set password = #{password}
+        where user_id = #{userId}
+    </update>
 
     <!-- 삭제 -->
     <update id="deleteUser" parameterType="int">

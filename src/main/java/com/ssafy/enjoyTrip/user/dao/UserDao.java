@@ -11,7 +11,7 @@ public interface UserDao {
     GetUserRes findByEmail(String email);
     GetUserRes findByNickname(String nickname);
     void modifyUser(ModifyUserReq modifyUserReq);
-//    void modifyPassword(ModifyPwdReq modifyPwdReq);
+    void modifyPassword(ModifyPwdReq modifyPwdReq);
     void deleteUser(int userId);
     List<GetUserRes> findAll();
 }
