@@ -20,6 +20,10 @@ import static com.ssafy.enjoyTrip.common.BaseResponseStatus.*;
 @Service
 public class FileService {
     private final String IMG_FILE_PATH;
+
+    @Value("${server.url}" + "/img/")
+    private String imgRequestUrl;
+
     private final Set<String> IMG_EXTENSION_LIST;
 
     public FileService(@Value("${file.dirPath.img}") String internalPath) {
@@ -45,20 +49,12 @@ public class FileService {
         try {
             File uploadFile = new File(fullPath);
             file.transferTo(uploadFile);
+            String saveFileUrl = imgRequestUrl + saveFileName;
             
-            return saveFileName;
+            return saveFileUrl;
         } catch (IOException e) {
             e.printStackTrace();
             throw new BaseException(FILE_UPLOAD_ERROR);
-        }
-    }
-
-    public UrlResource getFile(String saveFileName) throws BaseException{
-        String fullPath = IMG_FILE_PATH + saveFileName;
-        try {
-            return new UrlResource("file:" + fullPath);
-        } catch (Exception e) {
-            throw new BaseException(FILE_DOWNLOAD_ERROR);
         }
     }
 

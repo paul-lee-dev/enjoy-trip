@@ -16,21 +16,9 @@ public class FileController {
     }
 
     @PostMapping
-    public String uploadFile(@RequestPart MultipartFile file) throws BaseException {
-        return fileService.uploadFile(file);
-    }
-
-    @GetMapping(value = "/test-file", produces="image/png")
-    public ResponseEntity<?> downloadOnlyFile(String fileName) throws BaseException {
+    public ResponseEntity<?> uploadFile(@RequestPart MultipartFile file) throws BaseException {
         return ResponseEntity
                 .ok()
-                .body(fileService.getFile(fileName));
-    }
-
-    @GetMapping("/test-Obj")
-    public ResponseEntity<?> downloadFileObj(String fileName) throws BaseException {
-        return ResponseEntity
-                .ok()
-                .body(new FileDto(fileName, fileService.getFile(fileName)));
+                .body(fileService.uploadFile(file));
     }
 }
