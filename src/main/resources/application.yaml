@@ -52,6 +52,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+#    static-path-pattern: /webapp/**
 
   servlet:
     multipart:
@@ -60,7 +61,7 @@ spring:
 
 file:
   dirPath:
-    img: C:\SSAFY\관통\imgUploadTest\
+    img: /src/main/webapp/img/
 
 # mybatis
 mybatis:
