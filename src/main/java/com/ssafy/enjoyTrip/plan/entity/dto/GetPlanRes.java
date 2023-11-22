@@ -5,7 +5,7 @@ import lombok.*;
 import java.util.List;
 
 @ToString
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 public class GetPlanRes {
     private int planId;
@@ -15,6 +15,7 @@ public class GetPlanRes {
     private List<List<PlanListDto>> planLists;
 
     private Integer pageNo;
+    private int likeCnt;
 
     /**
      * 계획 상세보기 -> 목록보기로 돌아갈 때 페이지 유지를 위한 정보 업데이트

@@ -10,7 +10,7 @@
                content_type_id as contentId, sido_code as sidoCode,
                gugun_code as gugunCode, latitude as lat,longitude as lon
         from attraction_info i
-             left join attraction_description d on i.attraction_info_id = d.attraction_info_id
+             left join attraction_detail d on i.attraction_info_id = d.attraction_info_id
         <if test="key != null">
             where
                 <if test='key.equals("name") and word != null'>
@@ -33,9 +33,9 @@
                 first_image as image, readcount as hit,
                 content_type_id as contentId, sido_code as sidoCode,
                 gugun_code as gugunCode, latitude as lat,longitude as lon,
-                d.overview as description
+                d.overview as detail
         from attraction_info i
-                left join attraction_description d on i.attraction_info_id = d.attraction_info_id
+                left join attraction_detail d on i.attraction_info_id = d.attraction_info_id
         where i.attraction_info_id = #{spotId}
     </select>
 

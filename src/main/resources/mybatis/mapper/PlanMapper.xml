@@ -34,13 +34,16 @@
         select count(*) from plan;
     </select>
 
-    <sql id="getPlanNormal">
-        select plan_id, user_id, title, order_string
-        from plan
-    </sql>
+
 
     <select id="getPlanByPlanId" parameterType="int" resultType="GetPlanRes">
-        <include refid="getPlanNormal" />
+        select plan_id, user_id, title, order_string,
+               (
+                   select count(*)
+                   from plan_like
+                   where plan_id = #{plan_id}
+               ) as like_cnt
+        from plan
         where plan_id = #{planId}
     </select>
 
@@ -112,5 +115,16 @@
 
     <delete id="deletePlanList" parameterType="int">
         delete from plan_list where plan_list_id = #{planListId}
+    </delete>
+
+    <!-- 좋아요 -->
+    <insert id="likePlan" parameterType="PlanLikeReq">
+        insert into plan_like(plan_id, user_id)
+        values(#{planId}, #{userId})
+    </insert>
+
+    <delete id="dislikePlan" parameterType="PlanDislikeReq">
+        delete from plan_like
+        where user_id = #{userId} and plan_id = #{planId}
     </delete>
 </mapper>

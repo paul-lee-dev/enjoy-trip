@@ -17,4 +17,6 @@ public interface PlanDao {
     void modifyOrder(ModifyOrderReq modifyOrderReq) throws SQLException;
     void deletePlan(int planId) throws SQLException;
     void deletePlanList(int planListId) throws SQLException;
+    void likePlan(PlanLikeReq planLikeReq) throws SQLException;
+    void dislikePlan(PlanDislikeReq planDislikeReq) throws SQLException;
 }

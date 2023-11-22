@@ -78,7 +78,7 @@
     </insert>
 
     <select id="listComment" parameterType="map" resultType="GetCommentRes">
-        select comment_id, user_id, content, updated_at
+        select comment_id, user_id, content, updated_at, parent_comment_id
         from comment
         where article_id = #{articleId}
     </select>

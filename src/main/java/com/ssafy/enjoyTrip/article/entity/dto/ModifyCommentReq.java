@@ -11,6 +11,9 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 public class ModifyCommentReq {
+    @NotNull(message="comment_id is null")
+    private int commentId;
+
     @NotNull(message="article_id is null")
     private int articleId;
 

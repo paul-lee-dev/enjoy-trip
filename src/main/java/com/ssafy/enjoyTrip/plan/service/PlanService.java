@@ -175,6 +175,24 @@ public class PlanService {
         }
     }
 
+    public void likePlan(PlanLikeReq planLikeReq) throws BaseException {
+        try {
+            planDao.likePlan(planLikeReq);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
+    }
+
+    public void dislikePlan(PlanDislikeReq planDislikeReq) throws BaseException {
+        try {
+            planDao.dislikePlan(planDislikeReq);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
+    }
+
     /**
      * @param planLists 정렬되지 않은 planLists
      * @param orderString order 정보를 담은 문자열

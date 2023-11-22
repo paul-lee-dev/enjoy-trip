@@ -118,4 +118,25 @@ public class PlanController {
                 .ok()
                 .build();
     }
+
+    // 좋아요
+    @PostMapping("/like")
+    public ResponseEntity<?> likePlan(@RequestBody PlanLikeReq planLikeReq) throws BaseException {
+        planService.likePlan(planLikeReq);
+
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    // 취소
+    @DeleteMapping("/like")
+    public ResponseEntity<?> dislikePlan(@RequestBody PlanDislikeReq planDislikeReq) throws BaseException {
+        planService.dislikePlan(planDislikeReq);
+
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
 }
