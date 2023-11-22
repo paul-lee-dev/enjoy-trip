@@ -1,12 +1,17 @@
 package com.ssafy.enjoyTrip.user.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.enjoyTrip.common.BaseException;
 import com.ssafy.enjoyTrip.user.dao.UserDao;
 import com.ssafy.enjoyTrip.user.entity.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
-
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,7 +26,7 @@ import static com.ssafy.enjoyTrip.common.BaseResponseStatus.*;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService
-//        , OAuth2UserService<OAuth2UserRequest, OAuth2User>
+        , OAuth2UserService<OAuth2UserRequest, OAuth2User>
 {
 
     private final UserDao userDao;
@@ -35,90 +40,90 @@ public class UserServiceImpl implements UserService
         }
     };
 
-//    @Override
-//    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-//        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
-//        OAuth2User oAuth2User = delegate.loadUser(userRequest);
-//
-//        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-//        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-//                .getUserInfoEndpoint().getUserNameAttributeName();
-//        String accessTokenValue = userRequest.getAccessToken().getTokenValue();
-//
-//        OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-//
-//        try {
-//            GetUserRes loginUser = saveOrUpdate(attributes,accessTokenValue);
-//
-//            httpSession.setAttribute("loginUser", loginUser);
-//
-//            return new DefaultOAuth2User(
-//                    Collections
-//                            .singleton(
-//                            new SimpleGrantedAuthority(
-//                                    "ROLE_"+loginUser
-//                                            .getRole())),
-//                    attributes.getAttributes(),
-//                    attributes.getNameAttributeKey());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            System.out.println("소셜 로그인 - saveOrUpdate 중 오류");
-//        }
-//        return null;
-//    }
-//
-//
-//    private GetUserRes saveOrUpdate(OAuthAttributes attributes, String accessTokenValue) throws Exception {
-//        GetUserRes getUserRes = findByNickname(attributes.getNickname());
-//        String registrationId = attributes.getRegistrationId();
-//        Map<String, String> newInfo = getNewestUserInfo(registrationId, accessTokenValue);
-//        System.out.println("newInfo = " + newInfo);
-//        System.out.println("attributes = " + attributes);
-//        System.out.println("attributes.getName() = " + attributes.getNickname());
-//        System.out.println("attributes.getEmail() = " + attributes.getEmail());
-//        System.out.println("attributes.getProfileImgUrl() = " + attributes.getProfileImgUrl());
-//        if (getUserRes != null) {
-//            System.out.println("user 이미 있음");
-//            // 수정 필요
-//            modifyUser(ModifyUserReq.builder()
-//                    .userId(getUserRes.getUserId())
-//                    .nickname(attributes.getNickname())
-//                    .email(attributes.getEmail())
-//                    .profileImgUrl(attributes.getProfileImgUrl())
-//                    .phoneNumber(getUserRes.getPhoneNumber())
-//                    .nickname(getUserRes.getNickname())
-//                    .build());
-//            System.out.println("modify userInfo");
-//        } else {
-//            System.out.println("새 유저 생성");
-//            userDao.createSnsUser(SnsInfoDto.builder()
-//                    .nickname(attributes.getNickname())
-//                    .email(attributes.getEmail())
-//                    .profileImgUrl(attributes.getProfileImgUrl())
-//                    .snsType(attributes.getRegistrationId())
-//                    .build());
-//            System.out.println("새 유저 생성 완료");
-//        }
-//        return attributes.getRegistrationId().equals("google")
-//                ? findByEmail(attributes.getEmail())
-//                : findByNickname(attributes.getNickname());
-//    }
-//
-//    private Map<String, String> getNewestUserInfo(String registrationId, String accessTokenValue) {
-//        HttpHeaders headers = new HttpHeaders();
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        // 헤더 설정
-//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-//        headers.set("Authorization", "Bearer "+ accessTokenValue);
-//
-//        HttpEntity<?> userInfoEntity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<HashMap> userInfoRes = restTemplate.exchange(userInfoUrls.get(registrationId), HttpMethod.GET,
-//                userInfoEntity, HashMap.class);
-//        Map<String, String> result = userInfoRes.getBody();
-//        return result;
-//    }
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
+        OAuth2User oAuth2User = delegate.loadUser(userRequest);
+
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
+                .getUserInfoEndpoint().getUserNameAttributeName();
+        String accessTokenValue = userRequest.getAccessToken().getTokenValue();
+
+        OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+
+        try {
+            GetUserRes loginUser = saveOrUpdate(attributes,accessTokenValue);
+
+            httpSession.setAttribute("loginUser", loginUser);
+
+            return new DefaultOAuth2User(
+                    Collections
+                            .singleton(
+                            new SimpleGrantedAuthority(
+                                    "ROLE_"+loginUser
+                                            .getRole())),
+                    attributes.getAttributes(),
+                    attributes.getNameAttributeKey());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("소셜 로그인 - saveOrUpdate 중 오류");
+        }
+        return null;
+    }
+
+
+    private GetUserRes saveOrUpdate(OAuthAttributes attributes, String accessTokenValue) throws Exception {
+        GetUserRes getUserRes = findByNickname(attributes.getNickname());
+        String registrationId = attributes.getRegistrationId();
+        Map<String, String> newInfo = getNewestUserInfo(registrationId, accessTokenValue);
+        System.out.println("newInfo = " + newInfo);
+        System.out.println("attributes = " + attributes);
+        System.out.println("attributes.getName() = " + attributes.getNickname());
+        System.out.println("attributes.getEmail() = " + attributes.getEmail());
+        System.out.println("attributes.getProfileImgUrl() = " + attributes.getProfileImgUrl());
+        if (getUserRes != null) {
+            System.out.println("user 이미 있음");
+            // 수정 필요
+            modifyUser(ModifyUserReq.builder()
+                    .userId(getUserRes.getUserId())
+                    .nickname(attributes.getNickname())
+                    .email(attributes.getEmail())
+                    .profileImgUrl(attributes.getProfileImgUrl())
+                    .phoneNumber(getUserRes.getPhoneNumber())
+                    .nickname(getUserRes.getNickname())
+                    .build());
+            System.out.println("modify userInfo");
+        } else {
+            System.out.println("새 유저 생성");
+            userDao.createSnsUser(SnsInfoDto.builder()
+                    .nickname(attributes.getNickname())
+                    .email(attributes.getEmail())
+                    .profileImgUrl(attributes.getProfileImgUrl())
+                    .snsType(attributes.getRegistrationId())
+                    .build());
+            System.out.println("새 유저 생성 완료");
+        }
+        return attributes.getRegistrationId().equals("google")
+                ? findByEmail(attributes.getEmail())
+                : findByNickname(attributes.getNickname());
+    }
+
+    private Map<String, String> getNewestUserInfo(String registrationId, String accessTokenValue) {
+        HttpHeaders headers = new HttpHeaders();
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 헤더 설정
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Authorization", "Bearer "+ accessTokenValue);
+
+        HttpEntity<?> userInfoEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<HashMap> userInfoRes = restTemplate.exchange(userInfoUrls.get(registrationId), HttpMethod.GET,
+                userInfoEntity, HashMap.class);
+        Map<String, String> result = userInfoRes.getBody();
+        return result;
+    }
 
 
     /**
