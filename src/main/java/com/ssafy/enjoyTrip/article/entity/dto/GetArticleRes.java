@@ -11,6 +11,7 @@ import lombok.*;
 public class GetArticleRes {
     private int articleId;
     private int userId;
+    private String userNickname;
     private String subject;
     private String content;
     private int hit;
