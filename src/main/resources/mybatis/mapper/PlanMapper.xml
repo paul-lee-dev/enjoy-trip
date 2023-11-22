@@ -64,6 +64,14 @@
     <insert id="createPlan" parameterType="CreatePlanReq">
         insert into plan(user_id, scope, title)
         values(#{userId}, #{scope}, #{title})
+
+        <selectKey resultType="int" keyProperty="planId" order="AFTER">
+            select plan_id
+            from plan
+            where user_id = #{userId}
+            order by plan_id desc
+            limit 1
+        </selectKey>
     </insert>
 
     <insert id="createPlanList" parameterType="CreatePlanListReq" >
@@ -79,6 +87,15 @@
             limit 1
             ))
         where plan_id = #{planId};
+    </insert>
+
+    <insert id="copyPlanLists" parameterType="copyPlanReq">
+        insert into plan_list(plan_id, attraction_id, dayNum)
+        (
+            select #{copyPlanId} as plan_id, attraction_id, dayNum
+            from plan_list
+            where plan_id = #{targetPlanId}
+        )
     </insert>
 
     <!-- 수정 -->

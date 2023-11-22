@@ -22,4 +22,11 @@ public class FileController {
                 .ok()
                 .body(new BaseResponse<>(fileService.uploadFile(file)));
     }
+
+    @PostMapping("/froala")
+    public ResponseEntity<?> uploadFileFroala(@RequestPart MultipartFile file) throws BaseException {
+        return ResponseEntity
+                .ok()
+                .body(new BaseResponse<>(fileService.uploadFileFroala(file)));
+    }
 }

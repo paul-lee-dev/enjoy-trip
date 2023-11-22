@@ -72,6 +72,15 @@ public class PlanController {
                 .build();
     }
 
+    @ApiOperation(value="다른 계획 복사하기 / userId, targetPlanId, scope 필요")
+    @PostMapping("/copy")
+    public ResponseEntity<?> copyPlan(@RequestBody CopyPlanReq copyPlanReq) throws BaseException {
+        planService.copyPlan(copyPlanReq);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
     @ApiOperation(value="관광지 추가")
     @PostMapping("/planlists")
     public ResponseEntity<?> createPlanList(@RequestBody CreatePlanListReq createPlanListReq) throws BaseException {

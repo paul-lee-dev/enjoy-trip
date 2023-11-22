@@ -92,6 +92,46 @@ public class PlanService {
     }
 
     /**
+     * userId, targetPlanId, scope는 담겨서 들어온다.
+     * @param copyPlanReq
+     * @throws BaseException
+     */
+    @Transactional
+    public void copyPlan(CopyPlanReq copyPlanReq) throws BaseException {
+        try {
+            GetPlanRes targetPlan = planDao.getPlanByPlanId(copyPlanReq.getTargetPlanId());
+
+            // 새 plan 생성
+            CreatePlanReq newPlanReq = new CreatePlanReq(copyPlanReq);
+            newPlanReq.setTitle(targetPlan.getTitle());
+            planDao.createPlan(newPlanReq);
+
+            copyPlanReq.setCopyPlanId(newPlanReq.getPlanId());
+
+            // planList 복사
+            planDao.copyPlanLists(copyPlanReq);
+
+            // planLists 가져오기
+            List<PlanListDto> planLists = planDao.getPlanLists(copyPlanReq.getCopyPlanId());
+            // orderString 만들기
+            StringBuilder orderStringBuilder = new StringBuilder();
+            for (PlanListDto planList : planLists) {
+                orderStringBuilder.append(" ").append(planList.getPlanListId());
+            }
+
+            // 업데이트
+            ModifyOrderReq modifyOrderReq = new ModifyOrderReq();
+            modifyOrderReq.setPlanId(copyPlanReq.getCopyPlanId());
+            modifyOrderReq.setOrderString(orderStringBuilder.toString());
+
+            planDao.modifyOrder(modifyOrderReq);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new BaseException(DB_ERROR);
+        }
+    }
+
+    /**
      * 계획 관리 페이지에서, 관광지 순서만 변경하는 작업(삭제는 별도로)
      * @param modifyOrderReq 새로운 orderString
      * @throws BaseException

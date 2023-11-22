@@ -13,6 +13,7 @@ public interface PlanDao {
     List<PlanListDto> getPlanLists(int planId) throws SQLException;
     void createPlan(CreatePlanReq createPlanReq) throws SQLException;
     void createPlanList(CreatePlanListReq createPlanListReq) throws SQLException;
+    void copyPlanLists(CopyPlanReq copyPlanReq) throws SQLException;
     void modifyOrder(ModifyOrderReq modifyOrderReq) throws SQLException;
     void deletePlan(int planId) throws SQLException;
     void deletePlanList(int planListId) throws SQLException;

@@ -25,6 +25,9 @@ public class FileService {
     private String imgRequestUrl;
 
     private final Set<String> IMG_EXTENSION_LIST;
+    private final String FROALA_PREFIX = "";
+    private final String FROALA_SUFFIX = "";
+
 
     public FileService(@Value("${file.dirPath.img}") String internalPath) {
         Set<String> imgFileExts = new HashSet<>();
@@ -56,6 +59,14 @@ public class FileService {
             e.printStackTrace();
             throw new BaseException(FILE_UPLOAD_ERROR);
         }
+    }
+
+    /**
+     * 파일 업로드_Floara(게시판 api)전용
+     */
+    public String uploadFileFroala(MultipartFile file) throws BaseException {
+        String saveFileName = uploadFile(file);
+        return FROALA_PREFIX + saveFileName + FROALA_SUFFIX;
     }
 
     /**

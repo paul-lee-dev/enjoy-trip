@@ -5,9 +5,9 @@
 
     <!-- 회원가입 -->
     <insert id="createUser" parameterType="createUserReq">
-        insert into user(email, password,
+        insert into user(email,
                          nickname, phone_number)
-        values (#{email}, #{password},
+        values (#{email},
                 #{nickname}, #{phoneNumber})
     </insert>
 
@@ -38,17 +38,17 @@
 
     <!-- 정보조회 -->
     <select id="findById" parameterType="int" resultType="getUserRes">
-        select user_id, email, password, nickname, profile_img as profile_img_url,
+        select user_id, email, nickname, profile_img as profile_img_url,
                created_at, phone_number, status, role
         from user where user_id = #{userId} and status != 'deleted'
     </select>
     <select id="findByEmail" parameterType="String" resultType="getUserRes">
-        select user_id, email, password, nickname, profile_img as profile_img_url,
+        select user_id, email, nickname, profile_img as profile_img_url,
                created_at, phone_number, status
         from user where email = #{email} and status != 'deleted'
     </select>
     <select id="findByNickname" parameterType="String" resultType="getUserRes">
-        select user_id, email, password, nickname, profile_img as profile_img_url,
+        select user_id, email, nickname, profile_img as profile_img_url,
                created_at, phone_number, status
         from user where nickname = #{nickname} and status != 'deleted'
     </select>
