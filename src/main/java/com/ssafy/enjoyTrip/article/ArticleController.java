@@ -67,10 +67,11 @@ public class ArticleController {
             else map.put("key", key);
         }
         if (word != null) map.put("word", word);
-        List<GetArticleRes> articleList = articleService.listArticle(map);
+        List<GetArticleRes> articles = articleService.listArticle(map);
+        System.out.println(articles);
         Map<String, Object> map2 = new HashMap<>();
-        map2.put("articles", articleList);
-        map2.put("currentPage", 1);
+        map2.put("articles", articles);
+        map2.put("currentPage", pgno);
         map2.put("totalPageCount", 5);
         return ResponseEntity
                 .ok()
