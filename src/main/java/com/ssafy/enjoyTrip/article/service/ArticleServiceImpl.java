@@ -8,9 +8,7 @@ import com.ssafy.enjoyTrip.common.constant.SizeConstant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.ssafy.enjoyTrip.common.BaseResponseStatus.DB_ERROR;
 
@@ -79,11 +77,34 @@ public class ArticleServiceImpl implements ArticleService {
         return pageNavigation;
     }
 
-    public GetArticleRes getArticle(int articleId) throws BaseException {
+    /**
+     *
+     * @param articleId
+     * @return resultMap {"article" : article 객체, "comments" : 댓글 리스트, "mappingInfo" : 댓글, 대댓글 매핑 정보를 표시한 map
+     * (key : parentCommentId, value : commentId) }
+     * @throws BaseException
+     */
+    public Map<String, Object> getArticle(int articleId) throws BaseException {
         try {
-            GetArticleRes getArticleRes = articleDao.getArticle(articleId);
-            System.out.println(getArticleRes);
-            return getArticleRes;
+            Map<String, Object> resultMap = new HashMap<>();
+            // 게시글 정보
+            resultMap.put("article", articleDao.getArticle(articleId));
+
+            // 댓글 리스트
+            List<GetCommentRes> comments = listComment(articleId);
+            resultMap.put("comments", listComment(articleId));
+
+            // 댓글, 대댓글 매핑 정보 map 생성
+            Map<Integer, List<Integer>> commentMappingMap = new HashMap<>();
+            for (GetCommentRes comment : comments) {
+                Integer parentCommentId = comment.getParentCommentId();
+                if (parentCommentId == null) continue;
+                commentMappingMap.putIfAbsent(parentCommentId, new ArrayList<>());
+                commentMappingMap.get(parentCommentId).add(comment.getCommentId());
+            }
+
+            resultMap.put("mappingInfo", commentMappingMap);
+            return resultMap;
         }catch (Exception e){
             e.printStackTrace();
             throw new BaseException(DB_ERROR);

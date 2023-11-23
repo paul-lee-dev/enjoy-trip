@@ -13,7 +13,7 @@ public interface ArticleService {
     void createArticle(CreateArticleReq createArticleReq) throws BaseException;
     List<GetArticleRes> listArticle(Map<String, String> map) throws BaseException;
     PageNavigation makePageNavigation(Map<String, String> map) throws BaseException;
-    GetArticleRes getArticle(int articleId) throws Exception;
+    Map<String, Object> getArticle(int articleId) throws Exception;
     void updateHit(int articleId) throws Exception;
     void modifyArticle(ModifyArticleReq modifyArticleReq) throws BaseException;
     void deleteArticle(int articleId) throws BaseException;

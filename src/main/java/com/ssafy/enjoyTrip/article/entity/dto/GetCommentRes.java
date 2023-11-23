@@ -13,7 +13,7 @@ public class GetCommentRes {
     private int commentId;
     private int userId;
     private String userNickname;
-    private String parentCommentId;
+    private Integer parentCommentId;
 
     @NotBlank(message="내용을 입력해주세요.")
     private String content;

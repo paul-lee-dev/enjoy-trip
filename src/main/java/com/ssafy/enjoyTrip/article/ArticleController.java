@@ -81,15 +81,10 @@ public class ArticleController {
     @ApiOperation(value = "글 상세 조회")
     @GetMapping("/{articleId}")
     public ResponseEntity<?> getArticle(@PathVariable int articleId) throws Exception {
-        GetArticleRes getArticleRes = articleService.getArticle(articleId);
-        List<GetCommentRes> comments = articleService.listComment(articleId);
         articleService.updateHit(articleId);
-        Map<String, Object> map = new HashMap<>();
-        map.put("article", getArticleRes);
-        map.put("comments", comments);
         return ResponseEntity
                 .ok()
-                .body(new BaseResponse<>(map));
+                .body(new BaseResponse<>(articleService.getArticle(articleId)));
     }
 
     @ApiOperation(value = "글 수정")

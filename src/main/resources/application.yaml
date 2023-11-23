@@ -1,5 +1,6 @@
 server:
   url: http://localhost:8080
+  port: 9090
 
 spring:
   profiles:
