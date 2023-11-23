@@ -52,7 +52,9 @@ public class SpotController {
         map.put("contentId",contentId);
         map.put("sidoId",sidoId);
         map.put("gugunId",gugunId);
+        System.out.println(map);
         List<GetSpotRes> spotList = spotService.getSpotList(map);
+        System.out.println("spotList.size() = " + spotList.size());
         return ResponseEntity
                 .ok()
                 .body(new BaseResponse<>(spotList));

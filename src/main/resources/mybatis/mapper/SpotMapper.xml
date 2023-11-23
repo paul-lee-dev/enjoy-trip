@@ -11,21 +11,22 @@
                gugun_code as gugunCode, latitude as lat,longitude as lon
         from attraction_info i
              left join attraction_detail d on i.attraction_info_id = d.attraction_info_id
-        <if test="key != null">
-            where
-                <if test='key.equals("name") and word != null'>
-                    title like concat('%', #{word}, '%') and
-                </if>
-                <if test='key.equals("type")'>
-                    attraction_info_id = #{attractionInfoId} and
-                </if>
-                <if test='key.equals("region")'>
-                    sido_code = #{sidoCode} and
-                    <if test='gugunCode != null'>
-                        gugun_code = #{gugunCode} and
-                    </if>
-                </if>
-        </if>
+        where content_type_id = #{contentId} and sido_code = #{sidoId} and gugun_code = #{gugunId}
+<!--        <if test="key != null">-->
+<!--            where-->
+<!--                <if test='key.equals("name") and word != null'>-->
+<!--                    title like concat('%', #{word}, '%') and-->
+<!--                </if>-->
+<!--                <if test='key.equals("type")'>-->
+<!--                    attraction_info_id = #{attractionInfoId} and-->
+<!--                </if>-->
+<!--                <if test='key.equals("region")'>-->
+<!--                    sido_code = #{sidoCode} and-->
+<!--                    <if test='gugunCode != null'>-->
+<!--                        gugun_code = #{gugunCode} and-->
+<!--                    </if>-->
+<!--                </if>-->
+<!--        </if>-->
     </select>
 
     <select id="getSpotDetail" parameterType="int" resultType="getSpotRes">
