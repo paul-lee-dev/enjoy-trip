@@ -13,6 +13,7 @@ public class CommonControllerAdvice {
 
     @ExceptionHandler({BaseException.class})
     public ResponseEntity<?> baseExceptionHandler(BaseException e) {
+        e.printStackTrace();
         return ResponseEntity
                 .badRequest()
                 .body(new BaseResponse<>(e));
