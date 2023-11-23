@@ -11,7 +11,7 @@ public interface UserService {
     void modifyUser(ModifyUserReq modifyUserReq) throws BaseException;
     void modifyPassword(ModifyPwdReq modifyPwdReq) throws BaseException;
     void deleteUser(Integer userId) throws BaseException;
-    void login(LoginReq loginReq, HttpSession session) throws BaseException;
+    GetUserRes login(LoginReq loginReq, HttpSession session) throws BaseException;
     void logout(HttpSession session) throws BaseException;
     GetUserRes findById(int userId) throws BaseException;
     GetUserRes findByNickname(String email) throws BaseException;

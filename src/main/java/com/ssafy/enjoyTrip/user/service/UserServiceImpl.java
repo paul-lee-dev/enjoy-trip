@@ -151,12 +151,13 @@ public class UserServiceImpl implements UserService
      * @param loginReq, session
      * @throws BaseException
      */
-    public void login(LoginReq loginReq, HttpSession session) throws BaseException { // findByEmail에서 예외 맞춰서 throw하므로, 그대로 던지면 됨
+    public GetUserRes login(LoginReq loginReq, HttpSession session) throws BaseException { // findByEmail에서 예외 맞춰서 throw하므로, 그대로 던지면 됨
         GetUserRes dbUser = findByEmail(loginReq.getEmail());
         if (dbUser == null) throw new BaseException(WRONG_EMAIL);
         if (!dbUser.getPassword().equals(loginReq.getPassword())) throw new BaseException(WRONG_PASSWORD);
 
         session.setAttribute("loginUser", dbUser);
+        return dbUser;
     }
 
     /**

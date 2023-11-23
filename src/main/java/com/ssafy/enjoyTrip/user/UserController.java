@@ -63,10 +63,10 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginReq loginReq, HttpSession session) throws BaseException {
-        userService.login(loginReq, session);
+        GetUserRes loginUser = userService.login(loginReq, session);
         return ResponseEntity
                 .ok()
-                .build();
+                .body(new BaseResponse<>(loginUser));
     }
 
     /**

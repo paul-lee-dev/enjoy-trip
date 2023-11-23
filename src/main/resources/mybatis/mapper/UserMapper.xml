@@ -6,9 +6,9 @@
     <!-- 회원가입 -->
     <insert id="createUser" parameterType="createUserReq">
         insert into user(email,
-                         nickname, phone_number)
+                         nickname, phone_number, password)
         values (#{email},
-                #{nickname}, #{phoneNumber})
+                #{nickname}, #{phoneNumber}, #{password})
     </insert>
 
     <insert id="createSnsUser" parameterType="snsInfoDto">
@@ -43,7 +43,7 @@
         from user where user_id = #{userId} and status != 'deleted'
     </select>
     <select id="findByEmail" parameterType="String" resultType="getUserRes">
-        select user_id, email, nickname, profile_img as profile_img_url,
+        select user_id, email, password, nickname, profile_img as profile_img_url,
                created_at, phone_number, status
         from user where email = #{email} and status != 'deleted'
     </select>
