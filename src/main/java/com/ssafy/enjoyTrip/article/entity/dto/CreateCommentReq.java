@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class CreateCommentReq {
     @NotNull(message="article_id is null")
     private int articleId;
-    private int parentCommentId;
+    private Integer parentCommentId;
     private String content;
     private int userId;
 }

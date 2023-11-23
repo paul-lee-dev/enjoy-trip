@@ -12,6 +12,6 @@ public class Comment {
     private int userId;
     private String content;
     private int articleId;
-    private int parentCommentId;
+    private Integer parentCommentId;
     private String updatedAt;
 }
