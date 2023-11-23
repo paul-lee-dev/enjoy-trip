@@ -67,11 +67,14 @@ public class ArticleController {
             else map.put("key", key);
         }
         if (word != null) map.put("word", word);
-        articleService.listArticle(map);
-
+        List<GetArticleRes> articleList = articleService.listArticle(map);
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("articles", articleList);
+        map2.put("currentPage", 1);
+        map2.put("totalPageCount", 5);
         return ResponseEntity
                 .ok()
-                .body(articleService.listArticle(map));
+                .body(new BaseResponse<>(map2));
     }
 
     @ApiOperation(value = "글 상세 조회")
