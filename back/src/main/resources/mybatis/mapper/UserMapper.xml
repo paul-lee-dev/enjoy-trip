@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoyTrip.user.dao.UserMapper">
+
+    <!-- 회원가입 -->
+    <insert id="createUser" parameterType="createUserReq">
+        insert into user(email,
+                         nickname, phone_number, password)
+        values (#{email},
+                #{nickname}, #{phoneNumber}, #{password})
+    </insert>
+
+    <insert id="createSnsUser" parameterType="snsInfoDto">
+        <choose>
+            <when test="email != null">
+                insert into user(email, nickname, profile_img)
+                values (#{email}, #{nickname}, #{profileImgUrl});
+
+                insert into sns_info(user_id, email, sns_type)
+                values((select user_id
+                        from user
+                        where email = #{email})
+                      , #{email}, #{snsType});
+            </when>
+            <otherwise>
+                insert into user(nickname, profile_img)
+                values (#{nickname}, #{profileImgUrl});
+
+                insert into sns_info(user_id, sns_type)
+                values((select user_id
+                from user
+                where nickname = #{nickname})
+                , #{snsType});
+            </otherwise>
+        </choose>
+    </insert>
+
+    <!-- 정보조회 -->
+    <select id="findById" parameterType="int" resultType="getUserRes">
+        select user_id, email, nickname, profile_img as profile_img_url,
+               created_at, phone_number, status, role
+        from user where user_id = #{userId} and status != 'deleted'
+    </select>
+    <select id="findByEmail" parameterType="String" resultType="getUserRes">
+        select user_id, email, password, nickname, profile_img as profile_img_url,
+               created_at, phone_number, status
+        from user where email = #{email} and status != 'deleted'
+    </select>
+    <select id="findByNickname" parameterType="String" resultType="getUserRes">
+        select user_id, email, nickname, profile_img as profile_img_url,
+               created_at, phone_number, status
+        from user where nickname = #{nickname} and status != 'deleted'
+    </select>
+    <select id = "findAll" resultType="getUserRes">
+        select user_id, email, nickname, profile_img as profile_img_url,
+                       created_at, phone_number, status
+        from user
+        where status != 'deleted'
+    </select>
+
+    <!-- 수정 -->
+    <update id="modifyUser" parameterType="modifyUserReq">
+        update user set email = #{email}, nickname = #{nickname}, phone_number = #{phoneNumber},
+                        profile_img = #{profileImgUrl}
+        where user_id = #{userId}
+    </update>
+
+    <update id="modifyPassword" parameterType="modifyPwdReq">
+        update user set password = #{password}
+        where user_id = #{userId}
+    </update>
+
+    <!-- 삭제 -->
+    <update id="deleteUser" parameterType="int">
+        update user set status = 'deleted'
+        where user_id = #{userId}
+    </update>
+</mapper>
